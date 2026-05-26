@@ -44,7 +44,7 @@ export default function AeroVector({ className = '', state = 'idle' }) {
           <line x1="60" y1="114" x2="57" y2="132" stroke="#000000" strokeWidth="7" strokeLinecap="round" />
           <line x1="60" y1="114" x2="57" y2="132" stroke="#ffffff" strokeWidth="4" strokeLinecap="round" />
           <circle cx="60" cy="114" r="3.5" fill="#ffffff" stroke="#000000" strokeWidth="1.2" />
-          <path d="M57 128 L65 133 L63 125 Z" fill="#ffffff" stroke="#000000" strokeWidth="1.2" strokeLinejoin="round" />
+          <path d="M57 128 L56 133 L68 132 Z" fill="#ffffff" stroke="#000000" strokeWidth="1.2" strokeLinejoin="round" />
 
           {/* Right Leg */}
           <line x1="44" y1="92" x2="40" y2="114" stroke="#000000" strokeWidth="8" strokeLinecap="round" />
@@ -52,7 +52,7 @@ export default function AeroVector({ className = '', state = 'idle' }) {
           <line x1="40" y1="114" x2="43" y2="132" stroke="#000000" strokeWidth="7" strokeLinecap="round" />
           <line x1="40" y1="114" x2="43" y2="132" stroke="#ffffff" strokeWidth="4" strokeLinecap="round" />
           <circle cx="40" cy="114" r="3.5" fill="#ffffff" stroke="#000000" strokeWidth="1.2" />
-          <path d="M43 128 L35 133 L37 125 Z" fill="#ffffff" stroke="#000000" strokeWidth="1.2" strokeLinejoin="round" />
+          <path d="M43 128 L44 133 L32 132 Z" fill="#ffffff" stroke="#000000" strokeWidth="1.2" strokeLinejoin="round" />
         </g>
 
         {/* Torso (Bodysuit core) */}

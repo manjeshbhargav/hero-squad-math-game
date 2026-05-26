@@ -27,6 +27,19 @@ export default function DashVector({ className = '', state = 'idle' }) {
           <circle cx="62" cy="48" r="7.5" fill="#facc15" stroke="#000000" strokeWidth="1.5" />
         </g>
 
+        {/* Right Arm (Foreground side - moved here so it is behind/overlapped by the torso) */}
+        <g className="dash-arm-right origin-[38px_48px]">
+          {/* Shoulder to elbow */}
+          <line x1="38" y1="48" x2="25" y2="65" stroke="#000000" strokeWidth="9" strokeLinecap="round" />
+          <line x1="38" y1="48" x2="25" y2="65" stroke="#2563eb" strokeWidth="6" strokeLinecap="round" />
+          {/* Forearm and fist */}
+          <line x1="25" y1="65" x2="20" y2="82" stroke="#000000" strokeWidth="8" strokeLinecap="round" />
+          <line x1="25" y1="65" x2="20" y2="82" stroke="#facc15" strokeWidth="5" strokeLinecap="round" />
+          <circle cx="20" cy="82" r="5.5" fill="#facc15" stroke="#000000" strokeWidth="1.5" />
+          {/* Shoulder Pad */}
+          <circle cx="38" cy="48" r="7.5" fill="#facc15" stroke="#000000" strokeWidth="1.5" />
+        </g>
+
         {/* Left Leg (Background side) */}
         <g className="dash-leg-left origin-[58px_80px]">
           {/* Thigh */}
@@ -38,7 +51,21 @@ export default function DashVector({ className = '', state = 'idle' }) {
           {/* Knee Pad */}
           <circle cx="68" cy="105" r="5" fill="#facc15" stroke="#000000" strokeWidth="1.5" />
           {/* Running shoe */}
-          <path d="M70 128 L84 134 L82 125 Z" fill="#facc15" stroke="#000000" strokeWidth="1.5" strokeLinejoin="round" />
+          <path d="M72 128 L71 134 L85 133 Z" fill="#facc15" stroke="#000000" strokeWidth="1.5" strokeLinejoin="round" />
+        </g>
+
+        {/* Right Leg (Foreground side) */}
+        <g className="dash-leg-right origin-[42px_80px]">
+          {/* Thigh */}
+          <line x1="42" y1="80" x2="32" y2="105" stroke="#000000" strokeWidth="11" strokeLinecap="round" />
+          <line x1="42" y1="80" x2="32" y2="105" stroke="#2563eb" strokeWidth="8" strokeLinecap="round" />
+          {/* Shin */}
+          <line x1="32" y1="105" x2="28" y2="132" stroke="#000000" strokeWidth="9" strokeLinecap="round" />
+          <line x1="32" y1="105" x2="28" y2="132" stroke="#facc15" strokeWidth="6" strokeLinecap="round" />
+          {/* Knee Pad */}
+          <circle cx="32" cy="105" r="5" fill="#facc15" stroke="#000000" strokeWidth="1.5" />
+          {/* Running shoe */}
+          <path d="M28 128 L29 134 L15 133 Z" fill="#facc15" stroke="#000000" strokeWidth="1.5" strokeLinejoin="round" />
         </g>
 
         {/* Torso (Main core) */}
@@ -59,33 +86,14 @@ export default function DashVector({ className = '', state = 'idle' }) {
           <circle cx="50" cy="58" r="6.2" fill="#facc15" />
           {/* Lightning Bolt */}
           <path d="M50 54 L46.5 58.5 L49.5 58.5 L48.5 62 L52.5 57 L49.5 57 Z" fill="#0f68d4" />
-        </g>
 
-        {/* Right Leg (Foreground side) */}
-        <g className="dash-leg-right origin-[42px_80px]">
-          {/* Thigh */}
-          <line x1="42" y1="80" x2="32" y2="105" stroke="#000000" strokeWidth="11" strokeLinecap="round" />
-          <line x1="42" y1="80" x2="32" y2="105" stroke="#2563eb" strokeWidth="8" strokeLinecap="round" />
-          {/* Shin */}
-          <line x1="32" y1="105" x2="28" y2="132" stroke="#000000" strokeWidth="9" strokeLinecap="round" />
-          <line x1="32" y1="105" x2="28" y2="132" stroke="#facc15" strokeWidth="6" strokeLinecap="round" />
-          {/* Knee Pad */}
-          <circle cx="32" cy="105" r="5" fill="#facc15" stroke="#000000" strokeWidth="1.5" />
-          {/* Running shoe */}
-          <path d="M30 128 L16 134 L18 125 Z" fill="#facc15" stroke="#000000" strokeWidth="1.5" strokeLinejoin="round" />
-        </g>
-
-        {/* Right Arm (Foreground side) */}
-        <g className="dash-arm-right origin-[38px_48px]">
-          {/* Shoulder to elbow */}
-          <line x1="38" y1="48" x2="25" y2="65" stroke="#000000" strokeWidth="9" strokeLinecap="round" />
-          <line x1="38" y1="48" x2="25" y2="65" stroke="#2563eb" strokeWidth="6" strokeLinecap="round" />
-          {/* Forearm and fist */}
-          <line x1="25" y1="65" x2="20" y2="82" stroke="#000000" strokeWidth="8" strokeLinecap="round" />
-          <line x1="25" y1="65" x2="20" y2="82" stroke="#facc15" strokeWidth="5" strokeLinecap="round" />
-          <circle cx="20" cy="82" r="5.5" fill="#facc15" stroke="#000000" strokeWidth="1.5" />
-          {/* Shoulder Pad */}
-          <circle cx="38" cy="48" r="7.5" fill="#facc15" stroke="#000000" strokeWidth="1.5" />
+          {/* Yellow Belt */}
+          <polygon points="38.6,76 61.4,76 61,82 39,82" fill="#facc15" stroke="#000000" strokeWidth="1.5" strokeLinejoin="round" />
+          {/* Belt Buckle */}
+          <circle cx="50" cy="79" r="5" fill="#eab308" stroke="#000000" strokeWidth="1.2" />
+          <circle cx="50" cy="79" r="4" fill="#facc15" />
+          {/* Mini Lightning Bolt Logo */}
+          <path d="M50 76.5 L47.5 79.5 L49.5 79.5 L48.5 82 L52.5 78.5 L50.5 78.5 Z" fill="#0f68d4" />
         </g>
 
         {/* Head & Hair Assembly */}
@@ -94,18 +102,21 @@ export default function DashVector({ className = '', state = 'idle' }) {
           <line x1="50" y1="45" x2="50" y2="35" stroke="#000000" strokeWidth="9" strokeLinecap="round" />
           <line x1="50" y1="45" x2="50" y2="35" stroke="#fed7aa" strokeWidth="6" strokeLinecap="round" />
           
-          {/* Glowing Electric Hair (Sweeping backwards) */}
-          <g className="dash-hair origin-[50px_25px]">
-            {/* Outline Shadow */}
-            <path d="M33 24 Q22 1 42 7 Q35 -14 53 2 Q62 -8 60 14 Q78 7 66 24 Q55 35 33 24 Z" fill="#d97706" stroke="#000000" strokeWidth="1.5" strokeLinejoin="round" />
-            {/* Main Hair */}
-            <path d="M35 24 Q25 3 44 9 Q38 -10 52 4 Q60 -5 58 15 Q75 10 64 24 Q55 33 35 24 Z" fill="#facc15" stroke="#000000" strokeWidth="1.5" strokeLinejoin="round" />
-            {/* Inner highlights */}
-            <path d="M42 12 Q46 -3 51 6 Q55 2 54 12 Z" fill="#fef08a" />
-          </g>
+          {/* Yellow Cowl Mask Base */}
+          <circle cx="50" cy="27" r="11" fill="#facc15" stroke="#000000" strokeWidth="1.5" />
 
-          {/* Face */}
-          <circle cx="50" cy="27" r="11" fill="#fed7aa" stroke="#000000" strokeWidth="1.5" />
+          {/* Blue F-shaped wings at ears */}
+          {/* Left Ear Wing */}
+          <path d="M60 28 L60 20 L67 18 L66 21 L60 22 L60 24 L65 24 L64 27 L60 27 Z" fill="#2563eb" stroke="#000000" strokeWidth="1" strokeLinejoin="round" />
+          {/* Right Ear Wing */}
+          <path d="M40 28 L40 20 L33 18 L34 21 L40 22 L40 24 L35 24 L36 27 L40 27 Z" fill="#2563eb" stroke="#000000" strokeWidth="1" strokeLinejoin="round" />
+
+          {/* Skin Cutout for Eyes */}
+          <ellipse cx="46.5" cy="25.5" rx="3.2" ry="4.2" fill="#fed7aa" stroke="#000000" strokeWidth="1" />
+          <ellipse cx="53.5" cy="25.5" rx="3.2" ry="4.2" fill="#fed7aa" stroke="#000000" strokeWidth="1" />
+
+          {/* Skin Cutout for Mouth/Lower Face */}
+          <path d="M42 29 C42 38 58 38 58 29 Z" fill="#fed7aa" stroke="#000000" strokeWidth="1" strokeLinejoin="round" />
           
           {/* Expressive Anime Eyes */}
           {/* Left Eye */}

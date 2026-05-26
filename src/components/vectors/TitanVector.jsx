@@ -22,7 +22,7 @@ export default function TitanVector({ className = '', state = 'idle' }) {
           <line x1="68" y1="120" x2="72" y2="136" stroke="#000000" strokeWidth="10" strokeLinecap="round" />
           <line x1="68" y1="120" x2="72" y2="136" stroke="#9ca3af" strokeWidth="7" strokeLinecap="round" />
           <circle cx="68" cy="120" r="6" fill="#e5e7eb" stroke="#000000" strokeWidth="1.5" /> {/* Knee pad */}
-          <path d="M68 132 L80 138 L78 128 Z" fill="#9ca3af" stroke="#000000" strokeWidth="1.5" strokeLinejoin="round" /> {/* Boot */}
+          <path d="M72 130 L71 138 L85 137 Z" fill="#9ca3af" stroke="#000000" strokeWidth="1.5" strokeLinejoin="round" /> {/* Boot */}
 
           {/* Right Leg */}
           <line x1="42" y1="95" x2="32" y2="120" stroke="#000000" strokeWidth="12" strokeLinecap="round" />
@@ -30,7 +30,7 @@ export default function TitanVector({ className = '', state = 'idle' }) {
           <line x1="32" y1="120" x2="28" y2="136" stroke="#000000" strokeWidth="10" strokeLinecap="round" />
           <line x1="32" y1="120" x2="28" y2="136" stroke="#9ca3af" strokeWidth="7" strokeLinecap="round" />
           <circle cx="32" cy="120" r="6" fill="#e5e7eb" stroke="#000000" strokeWidth="1.5" /> {/* Knee pad */}
-          <path d="M32 132 L20 138 L22 128 Z" fill="#9ca3af" stroke="#000000" strokeWidth="1.5" strokeLinejoin="round" /> {/* Boot */}
+          <path d="M28 130 L29 138 L15 137 Z" fill="#9ca3af" stroke="#000000" strokeWidth="1.5" strokeLinejoin="round" /> {/* Boot */}
         </g>
 
         {/* Left Arm (Background side) */}
@@ -81,36 +81,28 @@ export default function TitanVector({ className = '', state = 'idle' }) {
 
         {/* Head Assembly */}
         <g className="titan-head origin-[50px_42px]">
-          {/* Thick Neck */}
-          <rect x="43" y="38" width="14" height="9" fill="#fed7aa" stroke="#000000" strokeWidth="1.5" />
+          {/* Thick Neck (Silver metal) */}
+          <rect x="43" y="38" width="14" height="9" fill="#9ca3af" stroke="#000000" strokeWidth="1.5" />
 
-          {/* Chin and head base */}
-          <path d="M39 25 L40 33 Q50 39 60 33 L61 25 Z" fill="#fed7aa" stroke="#000000" strokeWidth="1.5" strokeLinejoin="round" />
-          <circle cx="50" cy="24" r="11" fill="#fed7aa" />
-
-          {/* Hair (Short spiky brown hairstyle) */}
-          <path d="M37 20 Q50 10 63 20 L61 14 Q50 5 39 14 Z" fill="#78350f" stroke="#000000" strokeWidth="1.5" strokeLinejoin="round" />
-          <path d="M39 15 L43 12 L48 14 L52 11 L57 14 L61 11" fill="none" stroke="#78350f" strokeWidth="1.5" strokeLinecap="round" />
+          {/* Helmet Base Dome */}
+          <path d="M34 26 C34 10 66 10 66 26 L64 38 Q50 44 36 38 Z" fill="#e5e7eb" stroke="#000000" strokeWidth="1.5" strokeLinejoin="round" />
           
-          {/* Angry Eyebrows */}
-          <path d="M41 21 Q45 19 49 22" fill="none" stroke="#451a03" strokeWidth="2.5" strokeLinecap="round" />
-          <path d="M59 21 Q55 19 51 22" fill="none" stroke="#451a03" strokeWidth="2.5" strokeLinecap="round" />
+          {/* Helmet Red Trims */}
+          <path d="M46 10 C46 6 54 6 54 10 L53 22 L47 22 Z" fill="#dc2626" stroke="#000000" strokeWidth="1" />
+          <path d="M34 26 L38 28 L36 38 L34 36 Z" fill="#dc2626" stroke="#000000" strokeWidth="1" />
+          <path d="M66 26 L62 28 L64 38 L66 36 Z" fill="#dc2626" stroke="#000000" strokeWidth="1" />
 
-          {/* Angry Eyes */}
-          <polygon points="42,24 48,24 46,26 43,26" fill="#ffffff" stroke="#000000" strokeWidth="0.8" />
-          <circle cx="45" cy="25" r="1" fill="#000000" />
-          
-          <polygon points="58,24 52,24 54,26 57,26" fill="#ffffff" stroke="#000000" strokeWidth="0.8" />
-          <circle cx="55" cy="25" r="1" fill="#000000" />
+          {/* Glowing Red Visor Slit */}
+          <rect x="40" y="20" width="20" height="5" fill="#ef4444" stroke="#000000" strokeWidth="1.2" rx="1" />
+          <line x1="42" y1="22.5" x2="58" y2="22.5" stroke="#ffffff" strokeWidth="0.8" />
 
-          {/* Nose */}
-          <path d="M49 25 L50 28 L51 25" fill="none" stroke="#78350f" strokeWidth="1" />
-
-          {/* Gritted Teeth Mouth */}
-          <rect x="45" y="30" width="10" height="4" fill="#ffffff" stroke="#000000" strokeWidth="1.2" rx="0.5" />
-          <line x1="45" y1="32" x2="55" y2="32" stroke="#000000" strokeWidth="0.8" />
-          <line x1="48" y1="30" x2="48" y2="34" stroke="#000000" strokeWidth="0.6" />
-          <line x1="52" y1="30" x2="52" y2="34" stroke="#000000" strokeWidth="0.6" />
+          {/* Metallic Mouth Grill Guard */}
+          <rect x="42" y="29" width="16" height="9" fill="#374151" stroke="#000000" strokeWidth="1.5" rx="1" />
+          {/* Grill bars */}
+          <line x1="45" y1="29" x2="45" y2="38" stroke="#000000" strokeWidth="1" />
+          <line x1="48" y1="29" x2="48" y2="38" stroke="#000000" strokeWidth="1" />
+          <line x1="52" y1="29" x2="52" y2="38" stroke="#000000" strokeWidth="1" />
+          <line x1="55" y1="29" x2="55" y2="38" stroke="#000000" strokeWidth="1" />
         </g>
 
       </g>

@@ -81,9 +81,9 @@ To facilitate iterative verification and human testing, development is structure
   - Game title and thematic layout (industrial zone styling, 2px rounded corners).
   - Gameplay summary introducing the mission to defeat Dr. Null and his Glitch-Bots.
   - Character introductions (Hero Squad and Dr. Null):
-    - **Dash:** Spiky yellow hair with highlights, blue/yellow speed suit with gold protective armor pads and chest emblem.
-    - **Titan:** Spiky brown hair, angry face with gritted teeth, heavy red/silver plate armor.
-    - **Aero:** Brown spiky hair, green/white flight suit with multi-blade silver wings.
+    - **Dash:** No hair, yellow cowl mask with blue F-shaped ear wings (eyes and mouth uncovered), blue speed suit with gold protective armor pads, chest emblem, a yellow belt covering the entire waist with a lightning logo on the buckle, and triangular feet attached at their shortest edge and stretched outwards.
+    - **Titan:** Metallic combat helmet with red trim, a glowing red visor, and a mouth grill guard, wearing heavy red/silver plate armor, with triangular feet attached at their shortest edge and stretched outwards.
+    - **Aero:** Brown spiky hair, green/white flight suit with multi-blade silver wings, and white triangular feet attached at their shortest edge and stretched outwards.
     - **Dr. Null:** Mad scientist coordinating robotic attacks.
   - Interactive "Start Playing" button.
 - **Testing Criterion:** Verify page layout, aesthetics, responsive sizing, and that clicking the start button transitions out of the landing page.
@@ -97,7 +97,7 @@ To facilitate iterative verification and human testing, development is structure
   - UI: 
     - Display mathematical equation on the Glitch-Bot's chest panel (widened container to `w-36` to fit equations clearly).
     - Four multi-choice option buttons.
-    - Checkered red-bordered finish line at `22%` progress.
+    - Thick chessboard-patterned finish line (width 24px, no red borders) at `22%` progress.
     - Health Bar prepended by a briefcase icon with a "+" inside it. The health bar and briefcase icon color dynamically transition from green (full) to red (empty) using an interpolated HSL value.
     - Score counter (no robots defeated count).
   - Combat & Progression:
