@@ -4,7 +4,7 @@
 
 - **Framework Architecture:** Built entirely as a self-contained, client-side React single-page interface layout.
 - **Styling Engine:** Tailwind CSS handles all spacing, positioning, and component properties. Custom inline constraints or design parameters must enforce a strict `2px` element corner rule (`rounded-[2px]`).
-- **Skeletal 2D Animation Method:** Characters must be built using inline SVG elements broken into grouped structural layers (`<g>` tags for head, torso, left arm, right arm, legs). Animation states are driven purely by toggling CSS classes that apply standard CSS keyframe transformations (e.g., `transform-origin` combined with `rotate()` or `translateY()`). No external visual graphic libraries, heavy 2D engines, Canvas contexts, or WebGL layers are permitted.
+- **Skeletal 2D Animation Method:** Characters must be built using inline SVG elements broken into grouped structural layers (`<g>` tags for head, torso, left arm, right arm, legs). Animation states are driven purely by toggling CSS classes that apply standard CSS keyframe transformations (e.g., `transform-origin` combined with `rotate()` or `translateY()`). No external visual graphic libraries, heavy 2D engines, Canvas contexts, or WebGL layers are permitted. All root SVG puppets must enforce `overflow: visible` to prevent vertical or horizontal clipping of body parts (like Titan's head during leaping animations) when moving beyond the default `viewBox` coordinates.
 - **Feature Flagging:** Deterministic data generation only. The system must operate independently of external API responses, mock generation models, or AI completion layers.
 - **Version Control Constraints:** All staging, committing, and repository-tracking operations are managed manually by human operators. Automations and agents must not run git commit commands.
 - **Responsive Design Architecture:** All user interfaces must adhere to a strict mobile-first design pattern. Spacing, padding, and layout rules must target compact mobile displays as the default, applying responsive breakpoints (`md:`, `lg:`) only to expand layouts. Global viewport clipping (`overflow-hidden`) must be disabled on mobile devices to allow natural vertical scrolling, preventing double scrollbars or truncated content.
@@ -14,7 +14,7 @@
 The application's runtime structure must manage level progression, user scores, character states, and equation contexts synchronously:
 
 - **Progression Tracking:** Tracks the current tier level integer (1 through 4) and handles changing hero visibility strings (`'Dash'`, `'Titan'`, `'Aero'`).
-- **Combat & Score Metrics:** 
+- **Combat & Score Metrics:**
   - `enemyHealth`: Tracks enemy structural integrity variables (0-100).
   - `enemyProgress`: Tracks enemy horizontal advancement percentage (0-100) towards the checkered finish line.
   - `score`: Tracks the user's score based on math answers (non-negative).
@@ -94,7 +94,7 @@ To facilitate iterative verification and human testing, development is structure
 - **Key Elements:**
   - Active Hero: **Dash** (remains in place at `left-[5%]` firing a Volt Strike yellow lightning bolt directly into the target Glitch-Bot).
   - Math Engine: Generate addition problems matching the Basic Non-Carry Addition rules.
-  - UI: 
+  - UI:
     - Display mathematical equation on the Glitch-Bot's chest panel (widened container to `w-36` to fit equations clearly).
     - Four multi-choice option buttons.
     - Thick chessboard-patterned finish line (width 24px, no red borders) at `22%` progress.
@@ -102,7 +102,7 @@ To facilitate iterative verification and human testing, development is structure
     - Score counter (no robots defeated count).
   - Combat & Progression:
     - Continuous Creep: Glitch-Bot slowly and continuously walks towards the finish line (1% progress every 450ms).
-    - Correct answer: Dash executes Volt Strike, Glitch-Bot loses 25% health, and is pushed back to the right by `10%` progress. Score increases by `+10` points.
+    - Correct answer: Dash executes Volt Strike, and after a `150ms` visual delay, the Glitch-Bot flashes, loses 25% health, and is pushed back to the right by `10%` progress. Score increases by `+10` points immediately.
     - Incorrect answer: Glitch-Bot instantly advances by `15%` progress, and score decreases by `-5` points (clamped to 0).
     - Equation changes immediately on both correct and incorrect selections.
     - Victory: Reduce Glitch-Bot's health to 0% (4 correct answers) before it crosses the finish line.
@@ -110,32 +110,33 @@ To facilitate iterative verification and human testing, development is structure
     - Modals: Level Mastered and Game Over screens display the final score.
 - **Testing Criterion:** Verify addition math logic (no carrying), Dash attack visuals, choice generation, score adjustments (+10/-5), pushback mechanics (-10% progress), health bar and briefcase icon color transitions (green to red), and modal score displays.
 
-### Phase 3: Level 1 - Basic Non-Borrow Subtraction
+### Phase 3: Level 2 - Basic Non-Borrow Subtraction
 
-- **Scope:** Implement ONLY the Level 1 Subtraction mechanics.
+- **Scope:** Implement ONLY the Level 2 Subtraction mechanics.
 - **Key Elements:**
   - Active Hero: **Titan** (Quake Smash attack animation).
   - Math Engine: Generate subtraction equations matching the Basic Non-Borrow Subtraction rules.
-  - UI: Keep identical layout, but equations switch to subtraction (`-`).
+  - UI: Keep identical layout, but equations switch to subtraction (`-`). The health bar's briefcase recovery icon continues to display a "+" logo unconditionally in all levels.
   - Combat & Progression:
+    - Screen Shake & Pushback Sync: Screen shake is delayed by `500ms` to match Titan's landing. Glitch-Bot damage, damage-flash, and `10%` pushback are delayed by `800ms` to match the concentric shockwave rings' impact.
     - Distractors: Incorporate Positional Displacement Error options.
 - **Testing Criterion:** Verify subtraction equations never require borrowing, check Positional Displacement distractor calculations, and verify combat feedback.
 
-### Phase 4: Level 2 - Forced Carry Addition
-
-- **Scope:** Implement ONLY Level 2 mechanics.
-- **Key Elements:**
-  - Active Hero: **Titan** (Quake Smash attack animation: leap, floor smash, concentric shockwave rings, and full-screen shake).
-  - Math Engine: Generate addition equations that strictly force a carry into the tens place.
-  - Distractors: Incorporate the Carry Bug option (`correctAnswer - 10`).
-  - Progression: Transition to Level 2 when Level 1 is won.
-- **Testing Criterion:** Verify all equations force a carry, Titan's screen-shake and shockwave animations function properly, and the Carry Bug distractor triggers correctly.
-
-### Phase 5: Level 3 - Forced Borrow Subtraction
+### Phase 4: Level 3 - Forced Carry Addition
 
 - **Scope:** Implement ONLY Level 3 mechanics.
 - **Key Elements:**
+  - Active Hero: **Aero** (Cyclone Blast attack animation: rapidly spinning on his legs, launching a wavy inverted-triangle-shaped tornado that is vertically centered in the combat arena).
+  - Math Engine: Generate addition equations that strictly force a carry into the tens place.
+  - Distractors: Incorporate the Carry Bug option (`correctAnswer - 10`).
+  - Progression: Transition to Level 3 when Level 2 is won.
+- **Testing Criterion:** Verify all equations force a carry, Aero's spinning on his legs and wavy tornado travel function properly, and the Carry Bug distractor triggers correctly.
+
+### Phase 5: Level 4 - Forced Borrow Subtraction
+
+- **Scope:** Implement ONLY Level 4 mechanics.
+- **Key Elements:**
   - Active Hero: **Aero** (Cyclone Blast attack animation: spinning green atmospheric vortex).
   - Math Engine: Generate subtraction equations that strictly force a borrow from the tens column.
-  - Progression: Transition to Level 3 when Level 2 is won.
+  - Progression: Transition to Level 4 when Level 3 is won.
 - **Testing Criterion:** Verify all subtraction equations force a borrow, Aero's cyclone vortex animation behaves correctly, and progression transitions properly.

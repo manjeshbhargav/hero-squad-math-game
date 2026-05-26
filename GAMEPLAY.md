@@ -4,6 +4,7 @@
 
 - **Viewport & Framing:** The game utilizes a fixed, zoomed-out viewport layout. This design guarantees that all action elements—the active hero, the advancing enemy, and the associated combat animations—remain completely visible, centered, and properly framed at all times.
 - **Aesthetic Styling:** All user interface components (including option buttons, dialogue containers, and progress indicators) strictly enforce a sleek, modern look featuring a precise `2px` border radius.
+- **Health Bar Icon:** The health bar of the Glitch-Bot is prepended by a health recovery/first-aid style briefcase icon. This briefcase icon unconditionally displays a "+" logo in all levels (including subtraction stages) to maintain its health/medical thematic appearance.
 - **Art Direction & Background:** The setting is an empty, high-tech industrial zone. To keep visual clutter to a minimum and focus purely on the gameplay, the background environment contains no human bystanders or background elements like blimps.
 - **Finish Line:** A thick chessboard-patterned finish line (`.checkered-finish-line`) is positioned close to the hero at `22%` progress, featuring a straight alternating grid of dark and light squares with no red borders. The Glitch-Bot must be defeated before it crosses this line.
 
@@ -12,8 +13,8 @@
 All characters are fully realized 2D human-stylized vector sprites, dynamically animated using skeletal limb rotations to feel alive even when idle (Reference character collage: `./src/assets/character-reference.png`).
 
 - **Dash (The Speedster):** A speedster hero wearing a yellow cowl mask with blue F-shaped ear wings (eyes and mouth uncovered, determined smile). He has no hair. He wears a blue speed suit with gold shoulder/knee/elbow pads, gold wrist gloves, a chest emblem containing a yellow lightning bolt inside a gold circle, and a yellow belt covering his entire waist with a circular buckle containing a blue lightning logo. His feet are represented by triangular shapes attached at their shortest edge to the outer tips of his legs and stretched outwards. During idle, he bounces in a running stance. He is the active hero for **Level 1 Addition**.
-- **Titan (The Heavy Brawler):** A heavy-metal brawler hero wearing a metallic combat helmet with red trim, a glowing red visor, and a mouth grill guard. He wears heavy red-and-silver tactical armor with large silver pauldrons, silver chest plate, belt with a square buckle, and silver heavy boots. His feet are represented by triangular shapes attached at their shortest edge to the outer tips of his legs and stretched outwards. He stands in a solid, grounded stance. He is the active hero for **Level 1 Subtraction** and **Level 2 Carry Addition**.
-- **Aero (The Tactical Flyer):** A flying human hero with swept-back brown spiky hair. He wears a green-and-white flight suit with a wing-suit featuring detailed multi-blade silver metal wing segments. His feet are represented by white triangular shapes attached at their shortest edge to the outer tips of his legs and stretched outwards. He hovers and flaps wings rapidly.
+- **Titan (The Heavy Brawler):** A heavy-metal brawler hero wearing a metallic combat helmet with red trim, a glowing red visor, and a mouth grill guard. He wears heavy red-and-silver tactical armor with large silver pauldrons, silver chest plate, belt with a square buckle, and silver heavy boots. His feet are represented by triangular shapes attached at their shortest edge to the outer tips of his legs and stretched outwards. He stands in a solid, grounded stance. He is the active hero for **Level 2 Subtraction**.
+- **Aero (The Tactical Flyer):** A flying human hero with swept-back brown spiky hair. He wears a green-and-white flight suit with a wing-suit featuring detailed multi-blade silver metal wing segments. His feet are represented by white triangular shapes attached at their shortest edge to the outer tips of his legs and stretched outwards. He hovers and flaps wings rapidly. He is the active hero for **Level 3 Carry Addition** and **Level 4 Forced Borrow Subtraction** (Phase 5).
 - **Dr. Null (The Villain):** A mad scientist coordinating robotic attacks from his command center out of frame.
 - **The Glitch-Bots (The Minions):** Mechanical, blocky robotic targets sent by Dr. Null. They feature a cylindrical neck, dome-shaped head with glowing red eyes, grill mouth, and a dark CRT computer monitor casing on their chest showing the math problem. At under 50% health, their outer armor plates slide apart to reveal a humorous red polka-dot interior frame.
 
@@ -21,9 +22,12 @@ All characters are fully realized 2D human-stylized vector sprites, dynamically 
 
 - **Dash’s Volt Strike:** Dash fires a Volt Strike lightning bolt straight from his hand to hit the Glitch-Bot. Dash stays in place at his position (`left-[5%]`) while firing, and the lightning bolt is styled as a detailed yellow jagged bolt with a bright white core that dynamically extends to target the Glitch-Bot's chest center.
 - **Titan’s Quake Smash:** Titan leaps upward, raises his vector arms, and strikes the floor, triggering a heavy visual shake effect across the entire gameplay screen alongside concentric shockwave rings that originate under his legs and radiate outwards to hit the Glitch-Bot.
-- **Aero’s Cyclone Blast:** Aero spins forward in mid-air, creating a spinning green atmospheric vortex that continuously rotates as it travels horizontally toward the target.
+- **Aero’s Cyclone Blast:** Aero spins rapidly on his legs, creating a wavy inverted-triangle-shaped tornado that is vertically centered in the combat arena and quickly sways vertically in a wave path while traveling horizontally to strike the Glitch-Bot.
 - **Creeping Mechanics:** Glitch-Bots walk slowly and continuously toward the finish line (advancing 1% progress every 450ms). Questions change immediately on both correct and incorrect answers.
-- **Glitch-Bot Pushback:** When the Glitch-Bot is hit by the hero's weapon (correct answer), it is pushed back by `10%` progress to the right.
+- **Glitch-Bot Pushback & Impact Timing:** When the player answers correctly, the pushback (-10% progress), damage deduction (-25% health), and damage-flash animation on the Glitch-Bot are carefully synchronized to trigger on visual impact:
+  * **Volt Strike (Addition):** Features a minor `150ms` delay to match the lightning bolt's travel time to the robot.
+  * **Quake Smash (Subtraction):** Features a `500ms` delayed screen-shake on floor impact, followed by a delayed pushback and damage trigger at `800ms` when the expanding concentric shockwave rings collide with the robot.
+  * **Cyclone Blast (Carry Addition):** Features a `800ms` delayed screen-shake on wind arrival, followed by a delayed pushback and damage trigger at `850ms` when the wavy vector tornado collides with the robot.
 
 ## 4. Game Rules & Scoring Logic
 
@@ -31,7 +35,7 @@ The game progresses based on the player's ability to defeat the Glitch-Bot befor
 
 ### Scoring & Performance Rules
 
-- **Right Answer:** Adds `+10` points to the score, inflicts 25% damage to the Glitch-Bot, and pushes the Glitch-Bot back by `10%` progress to the right.
+- **Right Answer:** Adds `+10` points to the score immediately, and inflicts 25% damage and 10% pushback on the Glitch-Bot synchronized to trigger on visual impact (150ms for Volt Strike, 800ms for Quake Smash).
 - **Wrong Answer:** Subtracts `-5` points from the score (clamped to a minimum of 0), and immediately penalizes the player by advancing the Glitch-Bot forward by `15%` progress.
 - **Defeat / Defeated Count:** The cumulative defeated robots count has been completely removed to focus purely on active session survival scoring.
 - **Victory Condition:** The player wins/masters the level by reducing the Glitch-Bot's health from 100% to 0% (requiring 4 correct answers).

@@ -83,6 +83,39 @@ export const generateLevel1Subtraction = () => {
 };
 
 /**
+ * Generates Level 2 Forced Carry Addition equations:
+ * - Combined ones place digits sum >= 10 (forces carry)
+ * - Combined tens place digits sum + carry < 10 (keeps final sum under 3 digits)
+ */
+export const generateLevel2Addition = () => {
+  // onesA: Random integer between 1 and 9
+  const onesA = Math.floor(Math.random() * 9) + 1;
+  // onesB: Bounded randomly between (10 - onesA) and 9
+  const minOnesB = 10 - onesA;
+  const onesB = Math.floor(Math.random() * (10 - minOnesB)) + minOnesB;
+
+  // tensA: Random integer between 1 and 4
+  const tensA = Math.floor(Math.random() * 4) + 1;
+  // tensB: Bounded randomly between 1 and 3
+  const tensB = Math.floor(Math.random() * 3) + 1;
+
+  const numA = tensA * 10 + onesA;
+  const numB = tensB * 10 + onesB;
+  const correctAnswer = numA + numB;
+
+  return {
+    numA,
+    numB,
+    operation: 'addition',
+    correctAnswer,
+    onesA,
+    onesB,
+    tensA,
+    tensB
+  };
+};
+
+/**
  * Generates four unique choices including custom educational distractors.
  * @param {Object} puzzle 
  * @returns {Array} Shuffled choices

@@ -313,6 +313,11 @@ html, body {
   background: rgba(6, 182, 212, 0.7);
 }
 
+/* Ensure vector puppets can render outside their SVG viewBox boundaries during leap/jump/hover animations */
+.vector-puppet {
+  overflow: visible !important;
+}
+
 /* SKELETAL 2D PUPPET ANIMATIONS */
 
 /* Dash Idle */
@@ -628,6 +633,117 @@ html, body {
 .quake-ring.ring-3 {
   animation: shockwaveExpand 0.4s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
   animation-delay: 0.59s;
+}
+
+/* Aero Cyclone Blast Attack Animations (Rapid spin on legs) */
+@keyframes aeroLegSpin {
+  0% {
+    transform: scaleX(1) translateY(0);
+  }
+  10% {
+    transform: scaleX(0.2) translateY(-2px);
+  }
+  20% {
+    transform: scaleX(-1) translateY(0);
+  }
+  30% {
+    transform: scaleX(-0.2) translateY(-2px);
+  }
+  40% {
+    transform: scaleX(1) translateY(0);
+  }
+  50% {
+    transform: scaleX(0.2) translateY(-2px);
+  }
+  60% {
+    transform: scaleX(-1) translateY(0);
+  }
+  70% {
+    transform: scaleX(-0.2) translateY(-2px);
+  }
+  80% {
+    transform: scaleX(1) translateY(0);
+  }
+  100% {
+    transform: scaleX(1) translateY(0);
+  }
+}
+
+.aero-puppet.state-attack .aero-body-assembly {
+  transform-origin: 50px 125px; /* Centered around his lower legs/shins */
+  animation: aeroLegSpin 0.8s ease-in-out forwards;
+}
+
+/* Cyclone Blast Vortex Styles (Vertically centered wavy tornado) */
+.cyclone-blast-container {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 100px;
+  height: 72px;
+  width: calc(var(--bot-left) - 50px);
+  pointer-events: none;
+  z-index: 40;
+}
+
+@media (min-width: 768px) {
+  .cyclone-blast-container {
+    top: 50%;
+    transform: translateY(-50%);
+    height: 90px;
+    left: 120px;
+    width: calc(var(--bot-left) - 70px);
+  }
+}
+
+.cyclone-vortex {
+  height: 100%;
+  width: 60px;
+  filter: drop-shadow(0 0 12px rgba(16, 185, 129, 0.75)) drop-shadow(0 0 3px rgba(167, 243, 208, 0.6));
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  transform-origin: center;
+}
+
+@keyframes cycloneTravel {
+  0% {
+    left: 0%;
+    transform: translateY(0) scale(0.2);
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+    left: 15%;
+    transform: translateY(-12px) scale(0.8); /* Sways up */
+  }
+  35% {
+    left: 35%;
+    transform: translateY(8px) scale(1);    /* Sways down */
+  }
+  55% {
+    left: 55%;
+    transform: translateY(-10px) scale(1.1);  /* Sways up */
+  }
+  75% {
+    left: 75%;
+    transform: translateY(6px) scale(1.15);   /* Sways down */
+  }
+  90% {
+    opacity: 1;
+    left: 90%;
+    transform: translateY(0) scale(1.1);     /* Centers exactly on Glitch-Bot chest */
+  }
+  100% {
+    left: 100%;
+    transform: translateY(0) scale(0.2);
+    opacity: 0;
+  }
+}
+
+.animate-cyclone-travel {
+  animation: cycloneTravel 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  animation-delay: 0.25s; /* Fires right at the peak of Aero's spin */
 }
 
 
