@@ -50,6 +50,37 @@ export const generateLevel1Addition = () => {
     tensB
   };
 };
+/**
+ * Generates Level 1 Basic Non-Borrow Subtraction equations:
+ * - Combined ones place digits sum >= 0 (no borrow)
+ * - Positive result in tens place
+ */
+export const generateLevel1Subtraction = () => {
+  // onesA: Random integer between 0 and 9
+  const onesA = Math.floor(Math.random() * 10);
+  // onesB: Bounded randomly between 0 and onesA
+  const onesB = Math.floor(Math.random() * (onesA + 1));
+
+  // tensA: Random integer between 2 and 9
+  const tensA = Math.floor(Math.random() * 8) + 2;
+  // tensB: Bounded randomly between 1 and (tensA - 1)
+  const tensB = Math.floor(Math.random() * (tensA - 1)) + 1;
+
+  const numA = tensA * 10 + onesA;
+  const numB = tensB * 10 + onesB;
+  const correctAnswer = numA - numB;
+
+  return {
+    numA,
+    numB,
+    operation: 'subtraction',
+    correctAnswer,
+    onesA,
+    onesB,
+    tensA,
+    tensB
+  };
+};
 
 /**
  * Generates four unique choices including custom educational distractors.
@@ -57,22 +88,36 @@ export const generateLevel1Addition = () => {
  * @returns {Array} Shuffled choices
  */
 export const generateChoices = (puzzle) => {
-  const { numA, numB, correctAnswer } = puzzle;
+  const { numA, numB, correctAnswer, operation, onesA, onesB, tensA, tensB } = puzzle;
   const choices = new Set();
   
   // 1. Add correct answer
   choices.add(correctAnswer);
 
-  // 2. The Carry Bug Option: correctAnswer - 10
-  const carryBug = correctAnswer - 10;
-  if (carryBug > 0 && carryBug !== correctAnswer) {
-    choices.add(carryBug);
-  }
+  if (operation === 'addition') {
+    // 2. The Carry Bug Option: correctAnswer - 10
+    const carryBug = correctAnswer - 10;
+    if (carryBug > 0 && carryBug !== correctAnswer) {
+      choices.add(carryBug);
+    }
 
-  // 3. Operational Flip Distractor: numA - numB (since we are doing addition)
-  const opFlip = Math.max(0, numA - numB);
-  if (opFlip !== correctAnswer && opFlip > 0) {
-    choices.add(opFlip);
+    // 3. Operational Flip Distractor: numA - numB (since we are doing addition)
+    const opFlip = Math.max(0, numA - numB);
+    if (opFlip !== correctAnswer && opFlip > 0) {
+      choices.add(opFlip);
+    }
+  } else if (operation === 'subtraction') {
+    // 2. The Positional Displacement Error: ((tensA - tensB) * 10) + Math.abs(onesA - onesB)
+    const posDisplacement = ((tensA - tensB) * 10) + Math.abs(onesA - onesB);
+    if (posDisplacement > 0 && posDisplacement !== correctAnswer) {
+      choices.add(posDisplacement);
+    }
+
+    // 3. Operational Flip Distractor: numA + numB (since we are doing subtraction)
+    const opFlip = numA + numB;
+    if (opFlip !== correctAnswer) {
+      choices.add(opFlip);
+    }
   }
 
   // 4. Fill in standard nearby offsets until we have 4 unique options

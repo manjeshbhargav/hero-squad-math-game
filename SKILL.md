@@ -114,7 +114,7 @@ To facilitate iterative verification and human testing, development is structure
 
 - **Scope:** Implement ONLY the Level 1 Subtraction mechanics.
 - **Key Elements:**
-  - Active Hero: **Dash** (Volt Strike attack animation).
+  - Active Hero: **Titan** (Quake Smash attack animation).
   - Math Engine: Generate subtraction equations matching the Basic Non-Borrow Subtraction rules.
   - UI: Keep identical layout, but equations switch to subtraction (`-`).
   - Combat & Progression:
@@ -125,7 +125,7 @@ To facilitate iterative verification and human testing, development is structure
 
 - **Scope:** Implement ONLY Level 2 mechanics.
 - **Key Elements:**
-  - Active Hero: **Titan** (Quake Smash attack animation: leap, floor smash, kinetic shockwave, and full-screen shake).
+  - Active Hero: **Titan** (Quake Smash attack animation: leap, floor smash, concentric shockwave rings, and full-screen shake).
   - Math Engine: Generate addition equations that strictly force a carry into the tens place.
   - Distractors: Incorporate the Carry Bug option (`correctAnswer - 10`).
   - Progression: Transition to Level 2 when Level 1 is won.

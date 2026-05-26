@@ -498,4 +498,136 @@ html, body {
   animation: botArmSwayRight 0.6s infinite ease-in-out;
 }
 
+/* Titan Quake Smash Attack Animations */
+@keyframes titanLeapSmash {
+  0% {
+    transform: translateY(0) scaleY(1);
+  }
+  30% {
+    transform: translateY(-24px) scaleY(1.05);
+  }
+  60% {
+    transform: translateY(-24px) scaleY(1.05);
+  }
+  80% {
+    transform: translateY(0) scaleY(0.85);
+  }
+  100% {
+    transform: translateY(0) scaleY(1);
+  }
+}
+
+@keyframes titanArmRaiseSmashLeft {
+  0% {
+    transform: rotate(-15deg);
+  }
+  30% {
+    transform: rotate(-130deg);
+  }
+  60% {
+    transform: rotate(-130deg);
+  }
+  80% {
+    transform: rotate(40deg);
+  }
+  100% {
+    transform: rotate(-15deg);
+  }
+}
+
+@keyframes titanArmRaiseSmashRight {
+  0% {
+    transform: rotate(15deg);
+  }
+  30% {
+    transform: rotate(130deg);
+  }
+  60% {
+    transform: rotate(130deg);
+  }
+  80% {
+    transform: rotate(-40deg);
+  }
+  100% {
+    transform: rotate(15deg);
+  }
+}
+
+.titan-puppet.state-attack .titan-body-assembly {
+  animation: titanLeapSmash 0.8s ease-in-out forwards;
+}
+
+.titan-puppet.state-attack .titan-arm-left {
+  animation: titanArmRaiseSmashLeft 0.8s ease-in-out forwards;
+}
+
+.titan-puppet.state-attack .titan-arm-right {
+  animation: titanArmRaiseSmashRight 0.8s ease-in-out forwards;
+}
+
+/* Quake Smash Kinetic Shockwave Styles (Concentric rings radiating from Titan's feet) */
+.quake-shockwave-rings-container {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 5; /* Rendered under Titan's feet & above base grid */
+}
+
+.quake-ring {
+  position: absolute;
+  left: calc(5% + 56px); /* Centered horizontally under Titan's legs */
+  bottom: 16px;          /* Aligned with Titan's ground line (bottom-4 in JSX) */
+  width: calc(2 * (var(--bot-left) - 5% - 56px));
+  height: calc(2 * (var(--bot-left) - 5% - 56px));
+  border: 4px solid rgba(239, 68, 68, 0.85);
+  border-radius: 50%;
+  /* High-end glow and radial gradient for a premium energy effect */
+  box-shadow: 
+    0 0 20px rgba(239, 68, 68, 0.7), 
+    inset 0 0 20px rgba(234, 179, 8, 0.5);
+  background: radial-gradient(circle, rgba(234, 179, 8, 0.12) 0%, rgba(239, 68, 68, 0.03) 60%, transparent 100%);
+  opacity: 0;
+  transform-origin: center;
+  transform: translate(-50%, 50%) scale(0) scaleY(0.25);
+}
+
+@keyframes shockwaveExpand {
+  0% {
+    transform: translate(-50%, 50%) scale(0) scaleY(0.25);
+    opacity: 0;
+    border-color: rgba(254, 240, 138, 0.9); /* Starts gold/yellow at impact center */
+  }
+  15% {
+    opacity: 1;
+    border-color: rgba(239, 68, 68, 0.9);  /* Becomes intense red */
+  }
+  80% {
+    opacity: 0.85;
+    border-color: rgba(239, 68, 68, 0.6);
+  }
+  100% {
+    transform: translate(-50%, 50%) scale(1) scaleY(0.25);
+    opacity: 0;
+    border-color: rgba(239, 68, 68, 0);
+  }
+}
+
+.quake-ring.ring-1 {
+  animation: shockwaveExpand 0.4s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+  animation-delay: 0.45s;
+}
+
+.quake-ring.ring-2 {
+  animation: shockwaveExpand 0.4s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+  animation-delay: 0.52s;
+}
+
+.quake-ring.ring-3 {
+  animation: shockwaveExpand 0.4s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+  animation-delay: 0.59s;
+}
+
 
