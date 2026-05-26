@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 import { Zap, ShieldAlert, Wind, Skull, Play, X, Info, ChevronLeft, ChevronRight } from 'lucide-react';
+import DashVector from './vectors/DashVector';
+import TitanVector from './vectors/TitanVector';
+import AeroVector from './vectors/AeroVector';
+import DrNullVector from './vectors/DrNullVector';
 
-export default function LandingPage() {
+export default function LandingPage({ onStart }) {
   const [showModal, setShowModal] = useState(false);
   const [carouselIndex, setCarouselIndex] = useState(0);
 
@@ -10,7 +14,7 @@ export default function LandingPage() {
       id: 'dash',
       name: 'Dash',
       role: 'The Speedster',
-      description: 'Uses lightning-fast speed to zap Glitch-Bots with electricity!',
+      description: 'Uses lightning-fast speed to zaps Glitch-Bots with electricity!',
       suit: 'Blue and yellow lightning suit.',
       weapon: 'Volt Strike: Zaps yellow lightning straight across the screen.',
       icon: Zap,
@@ -111,13 +115,12 @@ export default function LandingPage() {
             </p>
             <div className="mt-4 pt-4 border-t border-slate-900/60 flex items-center justify-between text-xs md:text-sm font-mono text-cyan-400/90 font-semibold">
               <span>TARGETS: ROBOT MINIONS</span>
-              <span>MATH MASTERY REQ: 80%</span>
             </div>
           </div>
 
           <div className="flex justify-center lg:justify-start w-full">
             <button
-              onClick={() => setShowModal(true)}
+              onClick={onStart || (() => setShowModal(true))}
               className="group relative flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-400 hover:to-teal-400 text-slate-950 font-display font-black text-lg tracking-wider uppercase strict-rounded transition-all duration-300 transform active:scale-95 shadow-[0_0_20px_rgba(34,211,238,0.3)] hover:shadow-[0_0_35px_rgba(34,211,238,0.6)] cursor-pointer w-full sm:w-auto"
             >
               <Play size={20} className="fill-slate-950 stroke-none group-hover:scale-110 transition-transform" />
@@ -136,7 +139,7 @@ export default function LandingPage() {
           </div>
 
           {/* Carousel Layout Container */}
-          <div className="relative flex flex-col items-center w-full max-w-lg mx-auto p-2">
+          <div className="relative flex flex-col items-center w-full max-w-2xl mx-auto p-2">
             
             {/* Inner row containing: Prev button, Active Card, Next button */}
             <div className="flex items-center justify-between w-full gap-4">
@@ -150,44 +153,58 @@ export default function LandingPage() {
                 <ChevronLeft size={24} />
               </button>
 
-              {/* Character Card Slot */}
+              {/* Character Card Slot with split text/vector layout */}
               {currentChar && (
                 <div
-                  className={`w-full p-5 sm:p-6 bg-slate-950/50 backdrop-blur-md border strict-rounded transition-all duration-300 shadow-2xl flex flex-col justify-between min-h-[360px] ${currentChar.bgBorderClass}`}
+                  className={`w-full p-5 sm:p-6 bg-slate-950/50 backdrop-blur-md border strict-rounded transition-all duration-300 shadow-2xl flex flex-col md:flex-row gap-6 justify-between items-stretch min-h-[380px] md:min-h-[340px] ${currentChar.bgBorderClass}`}
                 >
-                  <div className="space-y-4">
-                    <div className="flex justify-between items-start gap-2">
-                      <div className="flex items-center gap-3">
-                        <div className={`p-2.5 bg-slate-900/80 border border-slate-800 strict-rounded ${currentChar.colorClass} transition-transform`}>
-                          {React.createElement(currentChar.icon, { size: 28 })}
+                  {/* Left Column: Dossier text */}
+                  <div className="flex-1 flex flex-col justify-between space-y-4 text-left">
+                    <div className="space-y-4">
+                      <div className="flex justify-between items-start gap-2">
+                        <div className="flex items-center gap-3">
+                          <div className={`p-2 bg-slate-900/80 border border-slate-800 strict-rounded ${currentChar.colorClass}`}>
+                            {React.createElement(currentChar.icon, { size: 20 })}
+                          </div>
+                          <div>
+                            <h3 className="font-display font-black text-white text-xl sm:text-2xl leading-tight">
+                              {currentChar.name}
+                            </h3>
+                            <span className={`text-xs font-mono tracking-wider uppercase font-bold ${currentChar.colorClass}`}>
+                              {currentChar.role}
+                            </span>
+                          </div>
                         </div>
-                        <div>
-                          <h3 className="font-display font-black text-white text-xl sm:text-2xl leading-tight">
-                            {currentChar.name}
-                          </h3>
-                          <span className={`text-xs font-mono tracking-wider uppercase font-bold ${currentChar.colorClass}`}>
-                            {currentChar.role}
-                          </span>
-                        </div>
+                        <span className="text-xs font-mono text-slate-300 border border-slate-800/80 px-2.5 py-0.5 strict-rounded bg-slate-950 font-semibold shrink-0">
+                          {currentChar.badge}
+                        </span>
                       </div>
-                      <span className="text-xs font-mono text-slate-300 border border-slate-800/80 px-2.5 py-0.5 strict-rounded bg-slate-950 font-semibold shrink-0">
-                        {currentChar.badge}
-                      </span>
+
+                      <p className="text-base sm:text-lg text-slate-200 leading-relaxed font-sans font-medium">
+                        {currentChar.description}
+                      </p>
                     </div>
 
-                    <p className="text-base sm:text-lg text-slate-200 leading-relaxed font-sans font-medium">
-                      {currentChar.description}
-                    </p>
+                    <div className="mt-4 pt-4 border-t border-slate-900/60 text-xs sm:text-sm font-mono space-y-2 text-slate-300">
+                      <div>
+                        <span className="text-slate-500 font-bold">GEAR:</span> {currentChar.suit}
+                      </div>
+                      <div>
+                        <span className="text-slate-500 font-bold">STRIKE:</span> {currentChar.weapon}
+                      </div>
+                    </div>
                   </div>
 
-                  <div className="mt-6 pt-4 border-t border-slate-900/60 text-xs sm:text-sm font-mono space-y-2 text-slate-300">
-                    <div>
-                      <span className="text-slate-500 font-bold">GEAR:</span> {currentChar.suit}
-                    </div>
-                    <div>
-                      <span className="text-slate-500 font-bold">STRIKE:</span> {currentChar.weapon}
+                  {/* Right Column: Live 2D Vector Puppet */}
+                  <div className="w-full md:w-40 flex items-center justify-center bg-slate-950/40 border border-slate-900/40 p-2 strict-rounded min-h-[180px] md:min-h-0">
+                    <div className="w-32 h-44">
+                      {currentChar.id === 'dash' && <DashVector state="idle" />}
+                      {currentChar.id === 'titan' && <TitanVector state="idle" />}
+                      {currentChar.id === 'aero' && <AeroVector state="idle" />}
+                      {currentChar.id === 'drnull' && <DrNullVector state="idle" />}
                     </div>
                   </div>
+
                 </div>
               )}
 

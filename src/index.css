@@ -160,3 +160,344 @@ html, body {
   border-width: 0 2px 2px 0;
   border-bottom-right-radius: 2px;
 }
+
+/* Checkered Finish Line */
+.checkered-finish-line {
+  position: absolute;
+  left: 22%;
+  top: 0;
+  bottom: 0;
+  width: 12px;
+  background-image: 
+    linear-gradient(45deg, #1e293b 25%, transparent 25%), 
+    linear-gradient(-45deg, #1e293b 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #ffffff 75%),
+    linear-gradient(-45deg, transparent 75%, #ffffff 75%);
+  background-size: 8px 8px;
+  background-position: 0 0, 0 4px, 4px -4px, -4px 0px;
+  border-left: 2px solid #ef4444;
+  border-right: 2px solid #ef4444;
+  z-index: 15;
+}
+
+/* Glitch-Bot Casing Positioning */
+.glitch-bot-container {
+  transition: left 0.3s ease-out;
+}
+
+/* Volt Strike Lightning Bolt Redesign */
+.volt-strike-container {
+  position: absolute;
+  bottom: 70px;
+  height: 30px;
+  pointer-events: none;
+  z-index: 40;
+  transform-origin: left center;
+  left: 100px;
+  width: calc(var(--bot-left) - 36px);
+}
+
+@media (min-width: 768px) {
+  .volt-strike-container {
+    bottom: 85px;
+    height: 36px;
+    left: 120px;
+    width: calc(var(--bot-left) - 56px);
+  }
+}
+
+@keyframes lightningFlicker {
+  0% {
+    opacity: 0;
+    transform: scaleX(0) scaleY(0.4) skewX(-2deg);
+  }
+  12% {
+    opacity: 1;
+    transform: scaleX(1) scaleY(1.3) skewX(2deg);
+  }
+  25% {
+    opacity: 0.25;
+    transform: scaleX(1) scaleY(0.6) skewX(-1deg);
+  }
+  38% {
+    opacity: 0.9;
+    transform: scaleX(1) scaleY(1.2) skewX(3deg);
+  }
+  50% {
+    opacity: 0.15;
+    transform: scaleX(1) scaleY(0.5) skewX(-3deg);
+  }
+  62% {
+    opacity: 1;
+    transform: scaleX(1) scaleY(1.4) skewX(0deg);
+  }
+  75% {
+    opacity: 0.3;
+    transform: scaleX(1) scaleY(0.7) skewX(2deg);
+  }
+  88% {
+    opacity: 0.95;
+    transform: scaleX(1) scaleY(1.1) skewX(-2deg);
+  }
+  100% {
+    opacity: 0;
+    transform: scaleX(1) scaleY(0.2) skewX(0deg);
+  }
+}
+
+.animate-lightning-bolt {
+  animation: lightningFlicker 0.6s ease-in-out forwards;
+}
+
+.glow-yellow-lightning {
+  filter: drop-shadow(0 0 3px rgba(250, 204, 21, 0.8)) drop-shadow(0 0 10px rgba(234, 179, 8, 0.5));
+}
+
+
+/* Glitch-Bot Damage Flash & Shake */
+@keyframes damageFlash {
+  0%, 100% {
+    border-color: rgba(239, 68, 68, 0.4);
+    transform: translateX(0);
+  }
+  20%, 60% {
+    border-color: rgba(239, 68, 68, 1);
+    background-color: rgba(239, 68, 68, 0.35);
+    transform: translateX(-8px);
+  }
+  40%, 80% {
+    border-color: rgba(239, 68, 68, 1);
+    background-color: rgba(239, 68, 68, 0.35);
+    transform: translateX(8px);
+  }
+}
+
+.animate-damage-flash {
+  animation: damageFlash 0.4s ease-in-out forwards;
+}
+
+/* Screen Shake Effect */
+@keyframes screenShake {
+  0%, 100% { transform: translate(0, 0); }
+  10%, 90% { transform: translate(-4px, 3px); }
+  30%, 70% { transform: translate(4px, -3px); }
+  50% { transform: translate(-3px, -4px); }
+}
+
+.animate-screen-shake {
+  animation: screenShake 0.4s ease-in-out;
+}
+
+/* Polka-Dot Interior Frame (Humorous visual reveal) */
+.polka-dot-bg {
+  background-color: #1e1e24;
+  background-image: radial-gradient(#e11d48 20%, transparent 20%), radial-gradient(#e11d48 20%, transparent 20%);
+  background-size: 14px 14px;
+  background-position: 0 0, 7px 7px;
+  border-color: #e11d48 !important;
+}
+
+/* Custom scrollbar styled with 2px borders */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.6);
+  border-radius: 2px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(6, 182, 212, 0.4);
+  border: 1px solid rgba(6, 182, 212, 0.2);
+  border-radius: 2px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(6, 182, 212, 0.7);
+}
+
+/* SKELETAL 2D PUPPET ANIMATIONS */
+
+/* Dash Idle */
+@keyframes dashIdleBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+@keyframes dashHairGlow {
+  0%, 100% { filter: drop-shadow(0 0 4px #eab308) brightness(1); }
+  50% { filter: drop-shadow(0 0 10px #facc15) brightness(1.25); }
+}
+@keyframes dashArmSwingIdle {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(-6deg); }
+}
+
+.dash-puppet.state-idle .dash-body-assembly {
+  animation: dashIdleBounce 1.2s infinite ease-in-out;
+}
+.dash-puppet.state-idle .dash-hair {
+  animation: dashHairGlow 1.5s infinite ease-in-out;
+}
+.dash-puppet.state-idle .dash-arm-right {
+  animation: dashArmSwingIdle 1.2s infinite ease-in-out;
+}
+
+/* Dash Run (Sprinting scissor cycle) */
+@keyframes dashLegScissorLeft {
+  0%, 100% { transform: rotate(-45deg); }
+  50% { transform: rotate(35deg); }
+}
+@keyframes dashLegScissorRight {
+  0%, 100% { transform: rotate(35deg); }
+  50% { transform: rotate(-45deg); }
+}
+@keyframes dashArmSwingLeft {
+  0%, 100% { transform: rotate(40deg); }
+  50% { transform: rotate(-40deg); }
+}
+@keyframes dashArmSwingRight {
+  0%, 100% { transform: rotate(-40deg); }
+  50% { transform: rotate(40deg); }
+}
+@keyframes dashTorsoTilt {
+  0%, 100% { transform: rotate(12deg); }
+  50% { transform: rotate(8deg); }
+}
+
+.dash-puppet.state-run .dash-leg-left,
+.dash-puppet.state-attack .dash-leg-left {
+  animation: dashLegScissorLeft 0.3s infinite linear;
+}
+.dash-puppet.state-run .dash-leg-right,
+.dash-puppet.state-attack .dash-leg-right {
+  animation: dashLegScissorRight 0.3s infinite linear;
+}
+.dash-puppet.state-run .dash-arm-left,
+.dash-puppet.state-attack .dash-arm-left {
+  animation: dashArmSwingLeft 0.3s infinite linear;
+}
+.dash-puppet.state-run .dash-arm-right,
+.dash-puppet.state-attack .dash-arm-right {
+  animation: dashArmSwingRight 0.3s infinite linear;
+}
+.dash-puppet.state-run .dash-torso,
+.dash-puppet.state-attack .dash-torso {
+  animation: dashTorsoTilt 0.3s infinite ease-in-out;
+}
+
+/* Titan Idle (Heavy breathing) */
+@keyframes titanBreathe {
+  0%, 100% { transform: scaleY(1); }
+  50% { transform: scaleY(1.03); }
+}
+@keyframes titanHeadBob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-1.5px); }
+}
+@keyframes titanArmSwayLeft {
+  0%, 100% { transform: rotate(-15deg); }
+  50% { transform: rotate(-11deg); }
+}
+@keyframes titanArmSwayRight {
+  0%, 100% { transform: rotate(15deg); }
+  50% { transform: rotate(11deg); }
+}
+
+.titan-puppet.state-idle .titan-torso {
+  animation: titanBreathe 2.4s infinite ease-in-out;
+}
+.titan-puppet.state-idle .titan-head {
+  animation: titanHeadBob 2.4s infinite ease-in-out;
+}
+.titan-puppet.state-idle .titan-arm-left {
+  animation: titanArmSwayLeft 2.4s infinite ease-in-out;
+}
+.titan-puppet.state-idle .titan-arm-right {
+  animation: titanArmSwayRight 2.4s infinite ease-in-out;
+}
+
+/* Aero Hover (Bobbing and fluttering wings) */
+@keyframes aeroBob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+@keyframes aeroShadowScale {
+  0%, 100% { transform: scale(1); opacity: 0.3; }
+  50% { transform: scale(0.85); opacity: 0.15; }
+}
+@keyframes aeroWingFlapLeft {
+  0%, 100% { transform: scaleX(1) rotate(0deg); }
+  50% { transform: scaleX(0.4) rotate(-10deg); }
+}
+@keyframes aeroWingFlapRight {
+  0%, 100% { transform: scaleX(1) rotate(0deg); }
+  50% { transform: scaleX(0.4) rotate(10deg); }
+}
+
+.aero-puppet.state-idle .aero-body-assembly {
+  animation: aeroBob 2s infinite ease-in-out;
+}
+.aero-puppet.state-idle .aero-shadow {
+  transform-origin: 50px 142px;
+  animation: aeroShadowScale 2s infinite ease-in-out;
+}
+.aero-puppet.state-idle .aero-wing-left {
+  animation: aeroWingFlapLeft 0.15s infinite ease-in-out;
+}
+.aero-puppet.state-idle .aero-wing-right {
+  animation: aeroWingFlapRight 0.15s infinite ease-in-out;
+}
+
+/* Dr. Null Hover */
+@keyframes nullFloat {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-8px) rotate(1deg); }
+}
+@keyframes nullHeadNod {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(-3deg); }
+}
+
+.null-puppet.state-idle .null-body-assembly {
+  animation: nullFloat 2.8s infinite ease-in-out;
+}
+.null-puppet.state-idle .null-head {
+  animation: nullHeadNod 2.8s infinite ease-in-out;
+}
+
+/* Glitch-Bot Hover/Walk */
+@keyframes botIdle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+.bot-puppet.state-idle .bot-body-assembly {
+  animation: botIdle 1.8s infinite ease-in-out;
+}
+
+@keyframes botWalkLegLeft {
+  0%, 100% { transform: rotate(-20deg); }
+  50% { transform: rotate(20deg); }
+}
+@keyframes botWalkLegRight {
+  0%, 100% { transform: rotate(20deg); }
+  50% { transform: rotate(-20deg); }
+}
+@keyframes botArmSwayLeft {
+  0%, 100% { transform: rotate(-10deg); }
+  50% { transform: rotate(10deg); }
+}
+@keyframes botArmSwayRight {
+  0%, 100% { transform: rotate(10deg); }
+  50% { transform: rotate(-10deg); }
+}
+
+.bot-puppet.state-walk .bot-legs {
+  animation: botWalkLegLeft 0.6s infinite ease-in-out;
+}
+.bot-puppet.state-walk .bot-arm-left {
+  animation: botArmSwayLeft 0.6s infinite ease-in-out;
+}
+.bot-puppet.state-walk .bot-arm-right {
+  animation: botArmSwayRight 0.6s infinite ease-in-out;
+}
+
+
