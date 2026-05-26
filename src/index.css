@@ -1,0 +1,162 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Outfit", sans-serif;
+  --font-display: "Orbitron", sans-serif;
+}
+
+/* Custom Base Styling */
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #0b0c10; /* Sleek futuristic dark background */
+  font-family: var(--font-sans);
+  font-size: 18px;
+  line-height: 1.6;
+  color: #c5c6c7;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+/* 2px Strict Corner Constraints */
+.strict-rounded {
+  border-radius: 2px !important;
+}
+
+/* High-tech Industrial Grid Background (No bystanders, no blimps, clean grids) */
+.industrial-bg {
+  background-color: #0b0c10;
+  background-image: 
+    linear-gradient(rgba(31, 38, 57, 0.2) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(31, 38, 57, 0.2) 1px, transparent 1px);
+  background-size: 40px 40px;
+  background-position: center;
+  position: relative;
+}
+
+/* Metallic panel shading to simulate command center border panels */
+.industrial-bg::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 50% 50%, transparent 40%, rgba(11, 12, 16, 0.9) 100%),
+    linear-gradient(180deg, rgba(11, 12, 16, 0.4) 0%, rgba(31, 38, 57, 0.1) 50%, rgba(11, 12, 16, 0.7) 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Neon Glow effects */
+.glow-cyan {
+  box-shadow: 0 0 15px rgba(102, 252, 241, 0.35);
+  border-color: rgba(102, 252, 241, 0.7);
+}
+
+.glow-yellow {
+  box-shadow: 0 0 15px rgba(234, 179, 8, 0.3);
+  border-color: rgba(234, 179, 8, 0.6);
+}
+
+.glow-red {
+  box-shadow: 0 0 15px rgba(239, 68, 68, 0.3);
+  border-color: rgba(239, 68, 68, 0.6);
+}
+
+.glow-green {
+  box-shadow: 0 0 15px rgba(34, 197, 94, 0.3);
+  border-color: rgba(34, 197, 94, 0.6);
+}
+
+.glow-purple {
+  box-shadow: 0 0 15px rgba(168, 85, 247, 0.3);
+  border-color: rgba(168, 85, 247, 0.6);
+}
+
+/* Text glow */
+.text-glow-cyan {
+  text-shadow: 0 0 10px rgba(102, 252, 241, 0.6);
+}
+
+.text-glow-yellow {
+  text-shadow: 0 0 10px rgba(234, 179, 8, 0.6);
+}
+
+.text-glow-red {
+  text-shadow: 0 0 10px rgba(239, 68, 68, 0.6);
+}
+
+.text-glow-green {
+  text-shadow: 0 0 10px rgba(34, 197, 94, 0.6);
+}
+
+/* Scanline Overlay for retro-futuristic displays */
+.scanlines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    rgba(18, 16, 16, 0) 50%, 
+    rgba(0, 0, 0, 0.25) 50%
+  ), linear-gradient(
+    90deg,
+    rgba(255, 0, 0, 0.06),
+    rgba(0, 255, 0, 0.02),
+    rgba(0, 0, 255, 0.06)
+  );
+  background-size: 100% 4px, 6px 100%;
+  pointer-events: none;
+  z-index: 999;
+  opacity: 0.45;
+}
+
+/* Sublte pulsing micro-animation */
+@keyframes techPulse {
+  0%, 100% {
+    opacity: 0.9;
+    box-shadow: 0 0 15px rgba(102, 252, 241, 0.2);
+  }
+  50% {
+    opacity: 1;
+    box-shadow: 0 0 25px rgba(102, 252, 241, 0.55);
+  }
+}
+
+.animate-tech-pulse {
+  animation: techPulse 3s infinite ease-in-out;
+}
+
+/* Subtle corner decorations for high-tech terminal look */
+.bracket-corner {
+  position: relative;
+}
+
+.bracket-corner::before, .bracket-corner::after {
+  content: '';
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-color: #66fcf1;
+  border-style: solid;
+  pointer-events: none;
+}
+
+.bracket-corner::before {
+  top: -2px;
+  left: -2px;
+  border-width: 2px 0 0 2px;
+  border-top-left-radius: 2px;
+}
+
+.bracket-corner::after {
+  bottom: -2px;
+  right: -2px;
+  border-width: 0 2px 2px 0;
+  border-bottom-right-radius: 2px;
+}
