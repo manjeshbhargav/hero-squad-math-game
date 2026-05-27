@@ -150,9 +150,9 @@ To facilitate iterative verification and human testing, development is structure
   - Active Hero: **Aero** (Cyclone Blast attack animation: rapidly spinning on his legs, launching a wavy inverted-triangle-shaped tornado that is vertically centered in the combat arena).
   - Math Engine: Generate addition equations that strictly force a carry into the tens place.
   - Distractors: Incorporate the Carry Bug option (`correctAnswer - 10`).
-  - Combat & Progression: Plays the incorrect answer sound effect (`wrong-answer.mp3`) on incorrect selection.
+  - Combat & Progression: Plays the incorrect answer sound effect (`wrong-answer.mp3`) on incorrect selection and plays the Cyclone Blast sound effect (`aero-whirlwind.mp3`) when Aero launches a whirlwind.
   - Progression: Transition to Level 4 when Level 3 is won.
-- **Testing Criterion:** Verify all equations force a carry, Aero's spinning on his legs and wavy tornado travel function properly, verify incorrect answer sound effect plays on error, and the Carry Bug distractor triggers correctly.
+- **Testing Criterion:** Verify all equations force a carry, Aero's spinning on his legs and wavy tornado travel function properly, verify incorrect answer sound effect plays on error, verify Aero's whirlwind sound effect (`aero-whirlwind.mp3`) plays on attack, and the Carry Bug distractor triggers correctly.
 
 ### Phase 6: Level 5 - Forced Borrow Subtraction
 

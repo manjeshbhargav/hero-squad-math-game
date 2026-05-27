@@ -23,9 +23,13 @@ const levelFailedAudio = new Audio(levelFailedSound);
 levelFailedAudio.preload = 'auto';
 
 import titanShockWaveSound from '../assets/titan-shock-wave.mp3';
+import aeroWhirlwindSound from '../assets/aero-whirlwind.mp3';
 
 const titanShockWaveAudio = new Audio(titanShockWaveSound);
 titanShockWaveAudio.preload = 'auto';
+
+const aeroWhirlwindAudio = new Audio(aeroWhirlwindSound);
+aeroWhirlwindAudio.preload = 'auto';
 
 export default function CombatArena({ onBack }) {
   const [currentLevel, setCurrentLevel] = useState(1); // 1 | 2 | 3 | 4
@@ -127,6 +131,9 @@ export default function CombatArena({ onBack }) {
         }, 800);
       } else if (currentLevel === 4) {
         // Aero's wind cyclone travel & hit
+        aeroWhirlwindAudio.currentTime = 0;
+        aeroWhirlwindAudio.play().catch((err) => console.log('Audio playback error:', err));
+
         setTimeout(() => {
           setScreenShake(true);
         }, 800);
