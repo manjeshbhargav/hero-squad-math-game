@@ -211,15 +211,19 @@ export default function LandingPage({ onStart }) {
             </div>
           </div>
 
-          <div className="flex justify-center lg:justify-start w-full">
+          <div className="flex flex-col sm:flex-row items-center gap-4 w-full max-w-lg mx-auto lg:mx-0">
             <button
               onClick={onStart || (() => setShowModal(true))}
-              className="group relative flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-400 hover:to-teal-400 text-slate-950 font-display font-black text-lg tracking-wider uppercase strict-rounded transition-all duration-300 transform active:scale-95 shadow-[0_0_20px_rgba(34,211,238,0.3)] hover:shadow-[0_0_35px_rgba(34,211,238,0.6)] cursor-pointer w-full sm:w-auto"
+              className="group relative flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-400 hover:to-teal-400 text-slate-950 font-display font-black text-lg tracking-wider uppercase strict-rounded transition-all duration-300 transform active:scale-95 shadow-[0_0_20px_rgba(34,211,238,0.3)] hover:shadow-[0_0_35px_rgba(34,211,238,0.6)] cursor-pointer flex-1 w-full"
             >
               <Play size={20} className="fill-slate-950 stroke-none group-hover:scale-110 transition-transform" />
               Start Playing
               <span className="absolute right-2 top-2 w-1.5 h-1.5 bg-white strict-rounded animate-ping"></span>
             </button>
+            <div className="flex flex-col justify-center text-[10px] sm:text-xs font-mono text-slate-400 border border-slate-800/80 px-4 py-2 strict-rounded bg-slate-950/40 backdrop-blur-sm self-stretch text-center sm:text-left shadow-lg whitespace-nowrap w-full sm:w-auto">
+              <div><span className="text-cyan-400 font-bold">Shift + N:</span> Next level</div>
+              <div><span className="text-purple-400 font-bold">Shift + P:</span> Prev level</div>
+            </div>
           </div>
         </section>
 

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'math-hero-squad-v3';
+const CACHE_NAME = 'math-hero-squad-v19';
 const PRECACHE_ASSETS = [
   './',
   './index.html',
@@ -34,13 +34,45 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
-// Fetch event: Cache first with Network fallback, caching new assets dynamically
+// Fetch event: Network-first for HTML/navigation requests, Cache-first for static assets
 self.addEventListener('fetch', (event) => {
   // Only handle HTTP/HTTPS requests (bypass chrome-extension://, data://, etc.)
   if (!event.request.url.startsWith(self.location.origin)) {
     return;
   }
 
+  // Always Network-First for HTML/navigation requests (index.html, root path, etc.)
+  const isHtml = event.request.mode === 'navigate' || 
+                 event.request.url.endsWith('/') || 
+                 event.request.url.endsWith('/index.html') || 
+                 event.request.url.includes('/index.html');
+
+  if (isHtml) {
+    event.respondWith(
+      fetch(event.request)
+        .then((response) => {
+          if (response && response.status === 200 && response.type === 'basic') {
+            const responseToCache = response.clone();
+            caches.open(CACHE_NAME).then((cache) => {
+              cache.put(event.request, responseToCache);
+            });
+          }
+          return response;
+        })
+        .catch((err) => {
+          console.log('[Service Worker] Fetch failed, falling back to cache for HTML:', err);
+          return caches.match(event.request).then((cachedResponse) => {
+            if (cachedResponse) {
+              return cachedResponse;
+            }
+            return caches.match('./index.html');
+          });
+        })
+    );
+    return;
+  }
+
+  // Cache-First with Network fallback for static assets
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
       if (cachedResponse) {
@@ -63,10 +95,6 @@ self.addEventListener('fetch', (event) => {
         return response;
       }).catch((err) => {
         console.error('[Service Worker] Fetch failed offline:', err);
-        // If navigation request fails, return cached index.html
-        if (event.request.mode === 'navigate') {
-          return caches.match('./index.html');
-        }
       });
     })
   );

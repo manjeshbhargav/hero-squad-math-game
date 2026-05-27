@@ -1,5 +1,3 @@
-import React from 'react';
-
 /**
  * DrNullVector.jsx
  * Fully realized 2D human-stylized vector puppet for Dr. Null (The Villain).
@@ -9,7 +7,7 @@ import React from 'react';
  * - null-torso (Pivot: 50px 75px) - Robed cyber chest
  * - null-arms (Pivot: 50px 70px) - Holding evil control pad
  */
-export default function DrNullVector({ className = '', state = 'idle' }) {
+export default function DrNullVector({ className = '', state = 'idle', children }) {
   return (
     <svg 
       viewBox="0 0 100 150" 
@@ -30,30 +28,27 @@ export default function DrNullVector({ className = '', state = 'idle' }) {
           {/* Cybernetic Purple Robe */}
           <path d="M32 58 L68 58 L70 112 L30 112 Z" fill="#7e22ce" stroke="#4a044e" strokeWidth="1.5" />
           
-          {/* Green toxic containment vial in center chest */}
-          <rect x="44" y="66" width="12" height="24" fill="#0f172a" rx="2" stroke="#10b981" strokeWidth="1.5" />
-          <rect x="46" y="74" width="8" height="14" fill="#10b981" opacity="0.8" rx="1" />
-          {/* Bubble effects */}
-          <circle cx="48" cy="78" r="1" fill="#ffffff" />
-          <circle cx="51" cy="84" r="1.5" fill="#ffffff" />
+          {!children && (
+            <>
+              {/* Green toxic containment vial in center chest */}
+              <rect x="44" y="66" width="12" height="24" fill="#0f172a" rx="2" stroke="#10b981" strokeWidth="1.5" />
+              <rect x="46" y="74" width="8" height="14" fill="#10b981" opacity="0.8" rx="1" />
+              {/* Bubble effects */}
+              <circle cx="48" cy="78" r="1" fill="#ffffff" />
+              <circle cx="51" cy="84" r="1.5" fill="#ffffff" />
+            </>
+          )}
         </g>
 
-        {/* Arms clenching the Cyber-controller */}
+        {/* Arms pointing outwards/downwards, keeping the chest display completely clear */}
         <g className="null-arms origin-[50px_70px]">
-          {/* Left Sleeve & forearm */}
-          <path d="M68 62 L80 82 L72 88 L64 74 Z" fill="#7e22ce" />
-          {/* Right Sleeve & forearm */}
-          <path d="M32 62 L20 82 L28 88 L36 74 Z" fill="#7e22ce" />
+          {/* Left Sleeve & forearm pointing outwards/downwards */}
+          <path d="M68 62 L80 82 L74 86 L64 74 Z" fill="#7e22ce" />
+          <circle cx="77" cy="84" r="3.5" fill="#fbcfe8" />
           
-          {/* Evil Gamepad controller */}
-          <rect x="36" y="80" width="28" height="15" fill="#1e293b" rx="2" stroke="#a855f7" strokeWidth="1.5" />
-          {/* Green control buttons */}
-          <circle cx="42" cy="87" r="2" fill="#10b981" />
-          <circle cx="58" cy="87" r="2.5" fill="#ef4444" />
-          
-          {/* Hands clenching the controller */}
-          <circle cx="34" cy="84" r="3.5" fill="#fbcfe8" />
-          <circle cx="66" cy="84" r="3.5" fill="#fbcfe8" />
+          {/* Right Sleeve & forearm pointing outwards/downwards */}
+          <path d="M32 62 L20 82 L26 86 L36 74 Z" fill="#7e22ce" />
+          <circle cx="23" cy="84" r="3.5" fill="#fbcfe8" />
         </g>
 
         {/* Head Assembly */}
@@ -77,6 +72,26 @@ export default function DrNullVector({ className = '', state = 'idle' }) {
           {/* Sinister grin */}
           <path d="M46 43 Q50 48 54 43" stroke="#9d174d" strokeWidth="1.5" strokeLinecap="round" fill="none" />
         </g>
+
+        {/* CRT Display Container (Rendered last to stay on top of everything) */}
+        {children && (
+          <g className="null-chest-display-container">
+            {/* Widened retro monitor frame (maintaining strict 2px corner radius) */}
+            <rect x="24" y="60" width="52" height="44" fill="#475569" stroke="#1e293b" strokeWidth="1.5" rx="2" ry="2" />
+            {/* Screen bezel */}
+            <rect x="27" y="63" width="46" height="38" fill="#334155" stroke="#000000" strokeWidth="1" rx="2" ry="2" />
+            {/* Screen glass */}
+            <rect x="29" y="65" width="42" height="34" fill="#0f172a" stroke="#000000" strokeWidth="1" rx="2" ry="2" />
+            {/* CRT glare line */}
+            <path d="M30 66 L44 66 L30 80 Z" fill="#ffffff" opacity="0.08" pointerEvents="none" />
+            
+            <foreignObject x="29" y="65" width="42" height="34">
+              <div className="w-full h-full flex items-center justify-center">
+                {children}
+              </div>
+            </foreignObject>
+          </g>
+        )}
 
       </g>
     </svg>

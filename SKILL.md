@@ -163,3 +163,14 @@ To facilitate iterative verification and human testing, development is structure
   - Combat & Progression: Plays the incorrect answer sound effect (`wrong-answer.mp3`) on incorrect selection and plays the Cyclone Blast sound effect (`aero-whirlwind.mp3`) when Aero launches a whirlwind.
   - Progression: Transition to Level 5 when Level 4 is won.
 - **Testing Criterion:** Verify all subtraction equations force a borrow, Aero's cyclone vortex animation behaves correctly, verify incorrect answer sound effect plays on error, and progression transitions properly.
+
+### Phase 7: Level 6 - Mixed Mastery Boss Wave
+
+- **Scope:** Implement ONLY Level 6 mechanics.
+- **Key Elements:**
+  - **Combat Opponent:** Dr. Null wearing a retro CRT computer monitor casing displaying the math equation. The gamepad controller he holds is removed, and his arms are moved to his sides to leave the screen completely unobstructed.
+  - **Math Engine:** Generate randomized equations chosen from Levels 1-5, retaining a reference to their source level.
+  - **Active Hero:** Dynamically swaps the active hero between Dash, Titan, and Aero depending on the problem's source level (Dash for levels 1-2, Titan for level 3, Aero for levels 4-5). Attacks and sound effects must match the active hero's mechanics.
+  - **Boss Health & Healing:** Dr. Null starts at 100% health. Correct answers deal 5% damage (requires 20 net correct answers). Incorrect answers heal him by 5% (capped at 100% health) and advance him by 15% progress.
+  - **Progression:** Transition to Level 6 from Level 5's victory screen. Level 6 victory concludes all training levels.
+- **Testing Criterion:** Verify random selection of problems and active heroes, check CRT display rendering on Dr. Null's chest, verify 5% correct answer damage and 5% incorrect answer heal (capped at 100%), and verify victory and reset states.

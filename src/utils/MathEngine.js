@@ -232,3 +232,38 @@ export const generateChoices = (puzzle) => {
   // Shuffle via randomized indexing arrays
   return shuffleArray(Array.from(choices));
 };
+
+/**
+ * Generates Level 6 Mixed Mastery Boss Wave equations:
+ * - Randomly selects a source level between 1 and 5
+ * - Invokes the corresponding generator
+ * - Appends `sourceLevel` to the output object
+ */
+export const generateLevel6Mixed = () => {
+  const levelNum = Math.floor(Math.random() * 5) + 1;
+  let puzzle;
+  switch (levelNum) {
+    case 1:
+      puzzle = generateSingleDigitAddition();
+      break;
+    case 2:
+      puzzle = generateLevel1Addition();
+      break;
+    case 3:
+      puzzle = generateLevel1Subtraction();
+      break;
+    case 4:
+      puzzle = generateLevel2Addition();
+      break;
+    case 5:
+      puzzle = generateLevel5Subtraction();
+      break;
+    default:
+      puzzle = generateSingleDigitAddition();
+  }
+  return {
+    ...puzzle,
+    sourceLevel: levelNum
+  };
+};
+
