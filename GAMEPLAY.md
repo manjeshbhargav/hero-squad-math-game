@@ -7,6 +7,8 @@
 - **Health Bar Icon:** The health bar of the Glitch-Bot is prepended by a health recovery/first-aid style briefcase icon. This briefcase icon unconditionally displays a "+" logo in all levels (including subtraction stages) to maintain its health/medical thematic appearance.
 - **Art Direction & Background:** The setting is an empty, high-tech industrial zone. To keep visual clutter to a minimum and focus purely on the gameplay, the background environment contains no human bystanders or background elements like blimps.
 - **Finish Line:** A thick chessboard-patterned finish line (`.checkered-finish-line`) is positioned close to the hero at `22%` progress, featuring a straight alternating grid of dark and light squares with no red borders. The Glitch-Bot must be defeated before it crosses this line.
+- **Loading Overlay Modal:** On initial launch, a fullscreen boot sequence overlay modal hides the main landing page, running a 5-second progress bar (0% to 100%) accompanied by system status checkpoints. Upon completion, the "Deploy Hero Squad" button is enabled to reveal the landing page.
+- **Intro Audio:** A looping theme song (`intro.mp3`) is preloaded and initiated on entering the landing page (using the loading screen start button click as the user interaction fallback). It is clean-paused when transitioning away from the landing page.
 
 ## 2. Characters & Cast (Animated 2D Vector Puppets)
 

@@ -82,8 +82,10 @@ To facilitate iterative verification and human testing, development is structure
 
 ### Phase 1: Landing Page & Onboarding
 
-- **Scope:** Implement ONLY the game landing page.
+- **Scope:** Implement the game landing page, loading sequence, and background audio.
 - **Key Elements:**
+  - **Loading Overlay Modal:** Fullscreen boot sequence modal on initial launch with a 5-second progress bar (0% to 100%) and rotating system check logs. Activates the "Deploy Hero Squad" button at 100% to dismiss the overlay.
+  - **Preloaded Background Audio:** Looping `intro.mp3` theme music preloaded at the module level. Playback begins once the loading overlay start button is clicked (resolving autoplay consent blocks) and pauses when the component unmounts.
   - Game title and thematic layout (industrial zone styling, 2px rounded corners).
   - Gameplay summary introducing the mission to defeat Dr. Null and his Glitch-Bots.
   - Character introductions (Hero Squad and Dr. Null):
@@ -92,7 +94,7 @@ To facilitate iterative verification and human testing, development is structure
     - **Aero:** Brown spiky hair, green/white flight suit with multi-blade silver wings, and white triangular feet attached at their shortest edge and stretched outwards.
     - **Dr. Null:** Mad scientist coordinating robotic attacks.
   - Interactive "Start Playing" button.
-- **Testing Criterion:** Verify page layout, aesthetics, responsive sizing, and that clicking the start button transitions out of the landing page.
+- **Testing Criterion:** Verify loading overlay progress timing (5 seconds), status text transitions, deployment button activation, autoplay audio bypass on click, audio muting/unmuting on stage navigation, page layout, dossier carousel responsiveness, and Start button transition.
 
 ### Phase 2: Level 1 - Single Digit Addition
 

@@ -1,13 +1,91 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Zap, ShieldAlert, Wind, Skull, Play, X, Info, ChevronLeft, ChevronRight } from 'lucide-react';
 import DashVector from './vectors/DashVector';
 import TitanVector from './vectors/TitanVector';
 import AeroVector from './vectors/AeroVector';
 import DrNullVector from './vectors/DrNullVector';
+import introMusic from '../assets/intro.mp3';
+
+const audio = new Audio(introMusic);
+audio.loop = true;
+audio.preload = 'auto';
+
+let hasShownLoading = false;
 
 export default function LandingPage({ onStart }) {
   const [showModal, setShowModal] = useState(false);
   const [carouselIndex, setCarouselIndex] = useState(0);
+
+  const [showLoading, setShowLoading] = useState(!hasShownLoading);
+  const [loadingProgress, setLoadingProgress] = useState(0);
+
+  // loading timer effect
+  useEffect(() => {
+    if (!showLoading) return;
+
+    const startTime = Date.now();
+    const duration = 5000; // 5 seconds
+
+    const timer = setInterval(() => {
+      const elapsed = Date.now() - startTime;
+      const progress = Math.min(100, Math.floor((elapsed / duration) * 100));
+      setLoadingProgress(progress);
+
+      if (progress >= 100) {
+        clearInterval(timer);
+      }
+    }, 30);
+
+    return () => clearInterval(timer);
+  }, [showLoading]);
+
+  // Audio playback effect
+  useEffect(() => {
+    // Reset to beginning when landing page mounts
+    audio.currentTime = 0;
+
+    // Only auto-play if the loading screen is not active (e.g. returning to menu)
+    if (!showLoading) {
+      const playAudio = () => {
+        audio.play().then(() => {
+          // Successfully playing, remove interaction listeners if any
+          window.removeEventListener('click', playAudio);
+          window.removeEventListener('keydown', playAudio);
+          window.removeEventListener('pointerdown', playAudio);
+        }).catch((err) => {
+          console.log('Autoplay blocked, waiting for user interaction:', err);
+        });
+      };
+
+      playAudio();
+
+      window.addEventListener('click', playAudio);
+      window.addEventListener('keydown', playAudio);
+      window.addEventListener('pointerdown', playAudio);
+
+      return () => {
+        audio.pause();
+        window.removeEventListener('click', playAudio);
+        window.removeEventListener('keydown', playAudio);
+        window.removeEventListener('pointerdown', playAudio);
+      };
+    }
+  }, [showLoading]);
+
+  const handleEnterClick = () => {
+    setShowLoading(false);
+    hasShownLoading = true;
+    audio.play().catch((err) => console.log('Audio playback error:', err));
+  };
+
+  const getStatusMessage = (progress) => {
+    if (progress < 20) return "Initializing Core CPU...";
+    if (progress < 40) return "Connecting to City Defense Servers...";
+    if (progress < 60) return "Syncing Hero Suit Nanotech...";
+    if (progress < 80) return "Preloading Glitch-Bot Target Vectors...";
+    if (progress < 100) return "Configuring Tactical Math Equations...";
+    return "All Systems Nominal. Ready for Deployment.";
+  };
 
   const characters = [
     {
@@ -280,6 +358,60 @@ export default function LandingPage({ onStart }) {
                 Acknowledge
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {showLoading && (
+        <div className="fixed inset-0 bg-slate-950 flex flex-col items-center justify-center p-4 z-50 select-none">
+          {/* Scanline Overlay */}
+          <div className="scanlines"></div>
+          
+          {/* High-tech box */}
+          <div className="relative w-full max-w-lg bg-slate-900 border border-cyan-500/40 p-8 strict-rounded shadow-[0_0_50px_rgba(6,182,212,0.15)] flex flex-col items-center space-y-6 animate-fade-in">
+            
+            {/* Corner Deco */}
+            <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-cyan-400 strict-rounded"></div>
+            <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-cyan-400 strict-rounded"></div>
+
+            <div className="text-center space-y-2">
+              <span className="inline-block text-[10px] font-mono font-bold tracking-[0.3em] text-cyan-400/80 bg-cyan-950/40 border border-cyan-800/40 px-2 py-0.5 strict-rounded">
+                BOOT SEQUENCE IN PROGRESS
+              </span>
+              <h2 className="text-2xl font-display font-black tracking-tight text-white uppercase pt-2">
+                MATH HERO SQUAD
+              </h2>
+              <p className="text-xs font-mono text-slate-500 uppercase tracking-widest">
+                Mainframe defense systems launching...
+              </p>
+            </div>
+
+            {/* Progress Bar & Status */}
+            <div className="w-full space-y-2">
+              <div className="flex justify-between items-center text-xs font-mono">
+                <span className="text-cyan-400/90 font-bold">{getStatusMessage(loadingProgress)}</span>
+                <span className="text-white font-black">{loadingProgress}%</span>
+              </div>
+              <div className="w-full h-4 bg-slate-950 border border-cyan-900/60 p-0.5 strict-rounded overflow-hidden">
+                <div
+                  className="h-full bg-gradient-to-r from-cyan-500 to-teal-500 strict-rounded transition-all duration-100 ease-out"
+                  style={{ width: `${loadingProgress}%` }}
+                />
+              </div>
+            </div>
+
+            {/* Action button */}
+            <button
+              onClick={handleEnterClick}
+              disabled={loadingProgress < 100}
+              className={`w-full py-4 font-display font-black text-base tracking-wider uppercase strict-rounded transition-all duration-300 transform ${
+                loadingProgress < 100
+                  ? 'bg-slate-950 border border-cyan-950 text-slate-600 cursor-not-allowed'
+                  : 'bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-400 hover:to-teal-400 text-slate-950 hover:shadow-[0_0_25px_rgba(6,182,212,0.5)] cursor-pointer active:scale-[0.98] animate-pulse'
+              }`}
+            >
+              {loadingProgress < 100 ? 'System Loading...' : 'Deploy Hero Squad'}
+            </button>
           </div>
         </div>
       )}
