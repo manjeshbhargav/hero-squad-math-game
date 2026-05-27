@@ -5,6 +5,22 @@ import TitanVector from './vectors/TitanVector';
 import AeroVector from './vectors/AeroVector';
 import GlitchBotVector from './vectors/GlitchBotVector';
 import { Award, AlertCircle, ArrowLeft, RefreshCw } from 'lucide-react';
+import voltStrikeSound from '../assets/dash-volt-strike.mp3';
+import wrongAnswerSound from '../assets/wrong-answer.mp3';
+import levelMasteredSound from '../assets/level-mastered.mp3';
+import levelFailedSound from '../assets/level-failed.mp3';
+
+const voltStrikeAudio = new Audio(voltStrikeSound);
+voltStrikeAudio.preload = 'auto';
+
+const wrongAnswerAudio = new Audio(wrongAnswerSound);
+wrongAnswerAudio.preload = 'auto';
+
+const levelMasteredAudio = new Audio(levelMasteredSound);
+levelMasteredAudio.preload = 'auto';
+
+const levelFailedAudio = new Audio(levelFailedSound);
+levelFailedAudio.preload = 'auto';
 
 export default function CombatArena({ onBack }) {
   const [currentLevel, setCurrentLevel] = useState(1); // 1 | 2 | 3 | 4
@@ -47,6 +63,14 @@ export default function CombatArena({ onBack }) {
 
     return () => clearInterval(interval);
   }, [isGameOver, isMastered, animationState]);
+
+  // Game over sound effect trigger
+  useEffect(() => {
+    if (isGameOver) {
+      levelFailedAudio.currentTime = 0;
+      levelFailedAudio.play().catch((err) => console.log('Audio playback error:', err));
+    }
+  }, [isGameOver]);
 
   const loadNewPuzzle = (level = currentLevel) => {
     let newPuzzle;
@@ -109,6 +133,9 @@ export default function CombatArena({ onBack }) {
         }, 850);
       } else {
         // Dash's fast electric strike
+        voltStrikeAudio.currentTime = 0;
+        voltStrikeAudio.play().catch((err) => console.log('Audio playback error:', err));
+
         setScreenShake(true);
         setTimeout(() => {
           setScreenShake(false);
@@ -131,6 +158,8 @@ export default function CombatArena({ onBack }) {
         if (newHealth <= 0) {
           // Enemy defeated! Player wins!
           setIsMastered(true); // Victory trigger
+          levelMasteredAudio.currentTime = 0;
+          levelMasteredAudio.play().catch((err) => console.log('Audio playback error:', err));
         } else {
           loadNewPuzzle();
         }
@@ -140,6 +169,9 @@ export default function CombatArena({ onBack }) {
     } else {
       // INCORRECT ANSWER: Advance
       if (incorrectAnswers.has(selectedAnswer)) return; // Prevent double-clicking same wrong answer
+
+      wrongAnswerAudio.currentTime = 0;
+      wrongAnswerAudio.play().catch((err) => console.log('Audio playback error:', err));
 
       setIncorrectAnswers((prev) => {
         const next = new Set(prev);

@@ -110,13 +110,13 @@ To facilitate iterative verification and human testing, development is structure
     - Score counter (no robots defeated count).
   - Combat & Progression:
     - Continuous Creep: Glitch-Bot slowly and continuously walks towards the finish line (1% progress every 450ms).
-    - Correct answer: Dash executes Volt Strike, and after a `150ms` visual delay, the Glitch-Bot flashes, loses 25% health, and is pushed back to the right by `10%` progress. Score increases by `+10` points immediately.
-    - Incorrect answer: Glitch-Bot instantly advances by `15%` progress, and score decreases by `-5` points (clamped to 0).
+    - Correct answer: Dash plays the volt strike sound effect (`dash-volt-strike.mp3`) and executes Volt Strike, and after a `150ms` visual delay, the Glitch-Bot flashes, loses 25% health, and is pushed back to the right by `10%` progress. Score increases by `+10` points immediately.
+    - Incorrect answer: Plays the incorrect answer sound effect (`wrong-answer.mp3`), Glitch-Bot instantly advances by `15%` progress, and score decreases by `-5` points (clamped to 0).
     - Equation changes immediately on both correct and incorrect selections.
     - Victory: Reduce Glitch-Bot's health to 0% (4 correct answers) before it crosses the finish line.
-    - Game Over: Glitch-Bot reaches 100% progress and crosses the finish line.
-    - Modals: Level Mastered and Game Over screens display the final score.
-- **Testing Criterion:** Verify single digit addition math logic, Dash attack visuals, choice generation, score adjustments (+10/-5), pushback mechanics (-10% progress), health bar and briefcase icon color transitions (green to red), and modal score displays.
+    - Game Over: Glitch-Bot reaches 100% progress and crosses the finish line, playing the level failed sound effect (`level-failed.mp3`).
+    - Modals: Level Mastered (plays victory sound effect `level-mastered.mp3`) and Game Over (plays defeat sound effect `level-failed.mp3`) screens display the final score.
+- **Testing Criterion:** Verify single digit addition math logic, Dash attack visuals, Volt Strike sound effect playback, incorrect answer sound effect playback, level mastery sound effect playback, level failure sound effect playback, choice generation, score adjustments (+10/-5), pushback mechanics (-10% progress), health bar and briefcase icon color transitions (green to red), and modal score displays.
 
 ### Phase 3: Level 2 - Basic Non-Carry Addition
 
@@ -127,7 +127,7 @@ To facilitate iterative verification and human testing, development is structure
   - UI: Same as Level 1.
   - Combat & Progression: Same as Level 1.
   - Progression: Transition to Level 2 when Level 1 is won.
-- **Testing Criterion:** Verify addition math logic (no carrying), Dash attack visuals, choice generation, score adjustments (+10/-5), pushback mechanics (-10% progress), health bar and briefcase icon color transitions (green to red), and modal score displays.
+- **Testing Criterion:** Verify addition math logic (no carrying), Dash attack visuals, Volt Strike sound effect playback, choice generation, score adjustments (+10/-5), pushback mechanics (-10% progress), health bar and briefcase icon color transitions (green to red), and modal score displays.
 
 ### Phase 4: Level 3 - Basic Non-Borrow Subtraction
 

@@ -22,7 +22,7 @@ All characters are fully realized 2D human-stylized vector sprites, dynamically 
 
 ## 3. Weapons, Combat & Visual Effects
 
-- **Dash’s Volt Strike:** Dash fires a Volt Strike lightning bolt straight from his hand to hit the Glitch-Bot. Dash stays in place at his position (`left-[5%]`) while firing, and the lightning bolt is styled as a detailed yellow jagged bolt with a bright white core that dynamically extends to target the Glitch-Bot's chest center.
+- **Dash’s Volt Strike:** Dash fires a Volt Strike lightning bolt straight from his hand to hit the Glitch-Bot. Dash stays in place at his position (`left-[5%]`) while firing, and the lightning bolt is styled as a detailed yellow jagged bolt with a bright white core that dynamically extends to target the Glitch-Bot's chest center. Firing the volt strike triggers the electric sound effect (`dash-volt-strike.mp3`).
 - **Titan’s Quake Smash:** Titan leaps upward, raises his vector arms, and strikes the floor, triggering a heavy visual shake effect across the entire gameplay screen alongside concentric shockwave rings that originate under his legs and radiate outwards to hit the Glitch-Bot.
 - **Aero’s Cyclone Blast:** Aero spins rapidly on his legs, creating a wavy inverted-triangle-shaped tornado that is vertically centered in the combat arena and quickly sways vertically in a wave path while traveling horizontally to strike the Glitch-Bot.
 - **Creeping Mechanics:** Glitch-Bots walk slowly and continuously toward the finish line (advancing 1% progress every 450ms). Questions change immediately on both correct and incorrect answers.
@@ -38,8 +38,8 @@ The game progresses based on the player's ability to defeat the Glitch-Bot befor
 ### Scoring & Performance Rules
 
 - **Right Answer:** Adds `+10` points to the score immediately, and inflicts 25% damage and 10% pushback on the Glitch-Bot synchronized to trigger on visual impact (150ms for Volt Strike, 800ms for Quake Smash).
-- **Wrong Answer:** Subtracts `-5` points from the score (clamped to a minimum of 0), and immediately penalizes the player by advancing the Glitch-Bot forward by `15%` progress.
+- **Wrong Answer:** Subtracts `-5` points from the score (clamped to a minimum of 0), immediately plays the incorrect answer sound effect (`wrong-answer.mp3`), and penalizes the player by advancing the Glitch-Bot forward by `15%` progress.
 - **Defeat / Defeated Count:** The cumulative defeated robots count has been completely removed to focus purely on active session survival scoring.
-- **Victory Condition:** The player wins/masters the level by reducing the Glitch-Bot's health from 100% to 0% (requiring 4 correct answers).
-- **Defeated Condition (Game Over):** If the Glitch-Bot reaches `100%` progress and crosses the checkered finish line, the defense is breached, resulting in a Game Over.
+- **Victory Condition:** The player wins/masters the level by reducing the Glitch-Bot's health from 100% to 0% (requiring 4 correct answers), which immediately displays the Mastery modal and plays the level mastery sound effect (`level-mastered.mp3`).
+- **Defeated Condition (Game Over):** If the Glitch-Bot reaches `100%` progress and crosses the checkered finish line, the defense is breached, resulting in a Game Over. This displays the Defense Breached overlay and plays the level failure sound effect (`level-failed.mp3`).
 - **Completion Modals:** Both the Level Mastered (Victory) and Defense Breached (Game Over) overlay screens display the final score.
