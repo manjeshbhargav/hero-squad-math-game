@@ -22,6 +22,11 @@ levelMasteredAudio.preload = 'auto';
 const levelFailedAudio = new Audio(levelFailedSound);
 levelFailedAudio.preload = 'auto';
 
+import titanShockWaveSound from '../assets/titan-shock-wave.mp3';
+
+const titanShockWaveAudio = new Audio(titanShockWaveSound);
+titanShockWaveAudio.preload = 'auto';
+
 export default function CombatArena({ onBack }) {
   const [currentLevel, setCurrentLevel] = useState(1); // 1 | 2 | 3 | 4
   const [gameState, setGameState] = useState(() => {
@@ -105,6 +110,9 @@ export default function CombatArena({ onBack }) {
       // Timed screen shake, damage, and pushback based on active hero/level timing
       if (currentLevel === 3) {
         // Titan's slam impact
+        titanShockWaveAudio.currentTime = 0;
+        titanShockWaveAudio.play().catch((err) => console.log('Audio playback error:', err));
+
         setTimeout(() => {
           setScreenShake(true);
         }, 500);
@@ -505,8 +513,8 @@ export default function CombatArena({ onBack }) {
           <div className="relative w-full max-w-md bg-slate-900 border border-green-500/40 p-6 strict-rounded shadow-[0_0_50px_rgba(34,197,94,0.15)] flex flex-col space-y-4 text-center">
             
             {/* Corner decorations */}
-            <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-green-400 strict-rounded"></div>
-            <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-green-400 strict-rounded"></div>
+            <div className="absolute -top-px -left-px w-4 h-4 border-t-2 border-l-2 border-green-400 rounded-tl-[2px]"></div>
+            <div className="absolute -bottom-px -right-px w-4 h-4 border-b-2 border-r-2 border-green-400 rounded-br-[2px]"></div>
 
             <div className="flex flex-col items-center space-y-2">
               <div className="p-3 bg-green-500/10 border border-green-500/30 text-green-400 strict-rounded animate-bounce">
@@ -641,8 +649,8 @@ export default function CombatArena({ onBack }) {
           <div className="relative w-full max-w-md bg-slate-900 border border-red-500/40 p-6 strict-rounded shadow-[0_0_50px_rgba(239,68,68,0.15)] flex flex-col space-y-4 text-center">
             
             {/* Corner decorations */}
-            <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-red-400 strict-rounded"></div>
-            <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-red-400 strict-rounded"></div>
+            <div className="absolute -top-px -left-px w-4 h-4 border-t-2 border-l-2 border-red-400 rounded-tl-[2px]"></div>
+            <div className="absolute -bottom-px -right-px w-4 h-4 border-b-2 border-r-2 border-red-400 rounded-br-[2px]"></div>
 
             <div className="flex flex-col items-center space-y-2">
               <div className="p-3 bg-red-500/10 border border-red-500/30 text-red-400 strict-rounded animate-pulse">

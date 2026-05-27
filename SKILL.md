@@ -133,14 +133,15 @@ To facilitate iterative verification and human testing, development is structure
 
 - **Scope:** Implement ONLY the Level 3 Subtraction mechanics.
 - **Key Elements:**
-  - Active Hero: **Titan** (Quake Smash attack animation).
+  - Active Hero: **Titan** (Quake Smash attack animation, triggering `titan-shock-wave.mp3` sound effect on jump).
   - Math Engine: Generate subtraction equations matching the Basic Non-Borrow Subtraction rules.
   - UI: Keep identical layout, but equations switch to subtraction (`-`). The health bar's briefcase recovery icon continues to display a "+" logo unconditionally in all levels.
   - Combat & Progression:
+    - Plays the incorrect answer sound effect (`wrong-answer.mp3`) on incorrect selection and plays the Quake Smash sound effect (`titan-shock-wave.mp3`) when Titan jumps.
     - Screen Shake & Pushback Sync: Screen shake is delayed by `500ms` to match Titan's landing. Glitch-Bot damage, damage-flash, and `10%` pushback are delayed by `800ms` to match the concentric shockwave rings' impact.
     - Distractors: Incorporate Positional Displacement Error options.
   - Progression: Transition to Level 3 when Level 2 is won.
-- **Testing Criterion:** Verify subtraction equations never require borrowing, check Positional Displacement distractor calculations, and verify combat feedback.
+- **Testing Criterion:** Verify subtraction equations never require borrowing, check Positional Displacement distractor calculations, verify incorrect answer sound effect plays on error, verify Titan shockwave sound effect plays on jump, and verify combat feedback.
 
 ### Phase 5: Level 4 - Forced Carry Addition
 
@@ -149,8 +150,9 @@ To facilitate iterative verification and human testing, development is structure
   - Active Hero: **Aero** (Cyclone Blast attack animation: rapidly spinning on his legs, launching a wavy inverted-triangle-shaped tornado that is vertically centered in the combat arena).
   - Math Engine: Generate addition equations that strictly force a carry into the tens place.
   - Distractors: Incorporate the Carry Bug option (`correctAnswer - 10`).
+  - Combat & Progression: Plays the incorrect answer sound effect (`wrong-answer.mp3`) on incorrect selection.
   - Progression: Transition to Level 4 when Level 3 is won.
-- **Testing Criterion:** Verify all equations force a carry, Aero's spinning on his legs and wavy tornado travel function properly, and the Carry Bug distractor triggers correctly.
+- **Testing Criterion:** Verify all equations force a carry, Aero's spinning on his legs and wavy tornado travel function properly, verify incorrect answer sound effect plays on error, and the Carry Bug distractor triggers correctly.
 
 ### Phase 6: Level 5 - Forced Borrow Subtraction
 
@@ -158,5 +160,6 @@ To facilitate iterative verification and human testing, development is structure
 - **Key Elements:**
   - Active Hero: **Aero** (Cyclone Blast attack animation: spinning green atmospheric vortex).
   - Math Engine: Generate subtraction equations that strictly force a borrow from the tens column.
+  - Combat & Progression: Plays the incorrect answer sound effect (`wrong-answer.mp3`) on incorrect selection.
   - Progression: Transition to Level 5 when Level 4 is won.
-- **Testing Criterion:** Verify all subtraction equations force a borrow, Aero's cyclone vortex animation behaves correctly, and progression transitions properly.
+- **Testing Criterion:** Verify all subtraction equations force a borrow, Aero's cyclone vortex animation behaves correctly, verify incorrect answer sound effect plays on error, and progression transitions properly.

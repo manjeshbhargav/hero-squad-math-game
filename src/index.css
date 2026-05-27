@@ -746,4 +746,17 @@ html, body {
   animation-delay: 0.25s; /* Fires right at the peak of Aero's spin */
 }
 
-
+/* Custom overrides to ensure absolute corner caps align perfectly with modal borders */
+.-bottom-px {
+  bottom: -1px !important;
+  margin: 0 !important;
+}
+.-right-px {
+  right: -1px !important;
+}
+.-top-px {
+  top: -1px !important;
+}
+.-left-px {
+  left: -1px !important;
+}

@@ -324,8 +324,8 @@ export default function LandingPage({ onStart }) {
           <div className="relative w-full max-w-md bg-slate-900 border border-cyan-500/40 p-6 strict-rounded shadow-[0_0_50px_rgba(6,182,212,0.15)] flex flex-col space-y-4">
             
             {/* Corner Deco */}
-            <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-cyan-400 strict-rounded"></div>
-            <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-cyan-400 strict-rounded"></div>
+            <div className="absolute -top-px -left-px w-4 h-4 border-t-2 border-l-2 border-cyan-400 rounded-tl-[2px]"></div>
+            <div className="absolute -bottom-px -right-px w-4 h-4 border-b-2 border-r-2 border-cyan-400 rounded-br-[2px]"></div>
 
             <div className="flex justify-between items-center border-b border-slate-800 pb-3">
               <h3 className="font-display font-black text-cyan-400 tracking-wider flex items-center gap-2 text-base uppercase">
@@ -371,8 +371,8 @@ export default function LandingPage({ onStart }) {
           <div className="relative w-full max-w-lg bg-slate-900 border border-cyan-500/40 p-8 strict-rounded shadow-[0_0_50px_rgba(6,182,212,0.15)] flex flex-col items-center space-y-6 animate-fade-in">
             
             {/* Corner Deco */}
-            <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-cyan-400 strict-rounded"></div>
-            <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-cyan-400 strict-rounded"></div>
+            <div className="absolute -top-px -left-px w-4 h-4 border-t-2 border-l-2 border-cyan-400 rounded-tl-[2px]"></div>
+            <div className="absolute -bottom-px -right-px w-4 h-4 border-b-2 border-r-2 border-cyan-400 rounded-br-[2px]"></div>
 
             <div className="text-center space-y-2">
               <span className="inline-block text-[10px] font-mono font-bold tracking-[0.3em] text-cyan-400/80 bg-cyan-950/40 border border-cyan-800/40 px-2 py-0.5 strict-rounded">
