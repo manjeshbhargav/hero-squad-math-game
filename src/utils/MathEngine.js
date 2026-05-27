@@ -18,6 +18,28 @@ const shuffleArray = (array) => {
 };
 
 /**
+ * Generates Level 1 Single Digit Addition equations:
+ * - numA: Random integer between 1 and 9
+ * - numB: Random integer between 1 and 9
+ */
+export const generateSingleDigitAddition = () => {
+  const numA = Math.floor(Math.random() * 9) + 1;
+  const numB = Math.floor(Math.random() * 9) + 1;
+  const correctAnswer = numA + numB;
+
+  return {
+    numA,
+    numB,
+    operation: 'addition',
+    correctAnswer,
+    onesA: numA,
+    onesB: numB,
+    tensA: 0,
+    tensB: 0
+  };
+};
+
+/**
  * Generates Level 1 Basic Non-Carry Addition equations:
  * - Combined ones place digits sum < 10
  * - Combined tens place digits sum < 9

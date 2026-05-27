@@ -21,7 +21,7 @@ export default function LandingPage({ onStart }) {
       colorClass: 'text-yellow-400',
       bgBorderClass: 'border-yellow-500/40 hover:border-yellow-400 hover:shadow-[0_0_15px_rgba(234,179,8,0.4)]',
       glowClass: 'glow-yellow',
-      badge: 'Level 1 Hero',
+      badge: 'Levels 1-2 Hero',
       type: 'hero'
     },
     {
@@ -35,7 +35,7 @@ export default function LandingPage({ onStart }) {
       colorClass: 'text-red-500',
       bgBorderClass: 'border-red-600/40 hover:border-red-500 hover:shadow-[0_0_15px_rgba(239,68,68,0.4)]',
       glowClass: 'glow-red',
-      badge: 'Level 2 Hero',
+      badge: 'Level 3 Hero',
       type: 'hero'
     },
     {
@@ -49,7 +49,7 @@ export default function LandingPage({ onStart }) {
       colorClass: 'text-emerald-400',
       bgBorderClass: 'border-emerald-500/40 hover:border-emerald-400 hover:shadow-[0_0_15px_rgba(52,211,153,0.4)]',
       glowClass: 'glow-green',
-      badge: 'Level 3 Hero',
+      badge: 'Levels 4-5 Hero',
       type: 'hero'
     },
     {

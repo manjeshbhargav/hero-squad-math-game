@@ -13,7 +13,7 @@
 
 The application's runtime structure must manage level progression, user scores, character states, and equation contexts synchronously:
 
-- **Progression Tracking:** Tracks the current tier level integer (1 through 4) and handles changing hero visibility strings (`'Dash'`, `'Titan'`, `'Aero'`).
+- **Progression Tracking:** Tracks the current tier level integer (1 through 5) and handles changing hero visibility strings (`'Dash'`, `'Titan'`, `'Aero'`).
 - **Combat & Score Metrics:**
   - `enemyHealth`: Tracks enemy structural integrity variables (0-100).
   - `enemyProgress`: Tracks enemy horizontal advancement percentage (0-100) towards the checkered finish line.
@@ -25,7 +25,13 @@ The application's runtime structure must manage level progression, user scores, 
 
 All algorithmic functions must reside in a stateless utility module (`MathEngine.js`). Generation routines require strict upper and lower limits to mathematically guarantee specific errors and operational contexts:
 
-### Basic Non-Carry Addition (Level 1)
+### Single Digit Addition (Level 1)
+
+- **Range Rule:** Generate single digit addition equations.
+  - `numA`: Random integer between 1 and 9.
+  - `numB`: Random integer between 1 and 9.
+
+### Basic Non-Carry Addition (Level 2)
 
 - **Ones Place Rule:** Ensure the combined sum of the ones place values is less than 10.
   - `onesA`: Random integer between 0 and 8.
@@ -34,7 +40,7 @@ All algorithmic functions must reside in a stateless utility module (`MathEngine
   - `tensA`: Random integer between 1 and 7.
   - `tensB`: Bounded randomly between 1 and `(8 - tensA)`.
 
-### Basic Non-Borrow Subtraction (Level 1)
+### Basic Non-Borrow Subtraction (Level 3)
 
 - **Ones Place Rule:** Ensure the top digit is greater than or equal to the bottom digit.
   - `onesA`: Random integer between 0 and 9.
@@ -43,7 +49,7 @@ All algorithmic functions must reside in a stateless utility module (`MathEngine
   - `tensA`: Random integer between 2 and 9.
   - `tensB`: Bounded randomly between 1 and `(tensA - 1)`.
 
-### Forced Carry Addition (Level 2)
+### Forced Carry Addition (Level 4)
 
 - **Ones Place Rule:** Force the values to cross the base-10 threshold.
   - `onesA`: Random integer between 1 and 9.
@@ -52,7 +58,7 @@ All algorithmic functions must reside in a stateless utility module (`MathEngine
   - `tensA`: Random integer between 1 and 4.
   - `tensB`: Random integer between 1 and 3.
 
-### Forced Borrow Subtraction (Level 3)
+### Forced Borrow Subtraction (Level 5)
 
 - **Ones Place Rule:** The top column digit must be strictly smaller than the bottom column digit.
   - `onesA`: Random integer between 0 and 8.
@@ -88,12 +94,12 @@ To facilitate iterative verification and human testing, development is structure
   - Interactive "Start Playing" button.
 - **Testing Criterion:** Verify page layout, aesthetics, responsive sizing, and that clicking the start button transitions out of the landing page.
 
-### Phase 2: Level 1 - Basic Non-Carry Addition
+### Phase 2: Level 1 - Single Digit Addition
 
 - **Scope:** Implement ONLY the Level 1 Addition mechanics.
 - **Key Elements:**
   - Active Hero: **Dash** (remains in place at `left-[5%]` firing a Volt Strike yellow lightning bolt directly into the target Glitch-Bot).
-  - Math Engine: Generate addition problems matching the Basic Non-Carry Addition rules.
+  - Math Engine: Generate addition problems matching the Single Digit Addition rules.
   - UI:
     - Display mathematical equation on the Glitch-Bot's chest panel (widened container to `w-36` to fit equations clearly).
     - Four multi-choice option buttons.
@@ -108,11 +114,22 @@ To facilitate iterative verification and human testing, development is structure
     - Victory: Reduce Glitch-Bot's health to 0% (4 correct answers) before it crosses the finish line.
     - Game Over: Glitch-Bot reaches 100% progress and crosses the finish line.
     - Modals: Level Mastered and Game Over screens display the final score.
+- **Testing Criterion:** Verify single digit addition math logic, Dash attack visuals, choice generation, score adjustments (+10/-5), pushback mechanics (-10% progress), health bar and briefcase icon color transitions (green to red), and modal score displays.
+
+### Phase 3: Level 2 - Basic Non-Carry Addition
+
+- **Scope:** Implement ONLY the Level 2 Addition mechanics.
+- **Key Elements:**
+  - Active Hero: **Dash** (Volt Strike yellow lightning bolt).
+  - Math Engine: Generate addition problems matching the Basic Non-Carry Addition rules.
+  - UI: Same as Level 1.
+  - Combat & Progression: Same as Level 1.
+  - Progression: Transition to Level 2 when Level 1 is won.
 - **Testing Criterion:** Verify addition math logic (no carrying), Dash attack visuals, choice generation, score adjustments (+10/-5), pushback mechanics (-10% progress), health bar and briefcase icon color transitions (green to red), and modal score displays.
 
-### Phase 3: Level 2 - Basic Non-Borrow Subtraction
+### Phase 4: Level 3 - Basic Non-Borrow Subtraction
 
-- **Scope:** Implement ONLY the Level 2 Subtraction mechanics.
+- **Scope:** Implement ONLY the Level 3 Subtraction mechanics.
 - **Key Elements:**
   - Active Hero: **Titan** (Quake Smash attack animation).
   - Math Engine: Generate subtraction equations matching the Basic Non-Borrow Subtraction rules.
@@ -120,23 +137,24 @@ To facilitate iterative verification and human testing, development is structure
   - Combat & Progression:
     - Screen Shake & Pushback Sync: Screen shake is delayed by `500ms` to match Titan's landing. Glitch-Bot damage, damage-flash, and `10%` pushback are delayed by `800ms` to match the concentric shockwave rings' impact.
     - Distractors: Incorporate Positional Displacement Error options.
+  - Progression: Transition to Level 3 when Level 2 is won.
 - **Testing Criterion:** Verify subtraction equations never require borrowing, check Positional Displacement distractor calculations, and verify combat feedback.
 
-### Phase 4: Level 3 - Forced Carry Addition
+### Phase 5: Level 4 - Forced Carry Addition
 
-- **Scope:** Implement ONLY Level 3 mechanics.
+- **Scope:** Implement ONLY Level 4 mechanics.
 - **Key Elements:**
   - Active Hero: **Aero** (Cyclone Blast attack animation: rapidly spinning on his legs, launching a wavy inverted-triangle-shaped tornado that is vertically centered in the combat arena).
   - Math Engine: Generate addition equations that strictly force a carry into the tens place.
   - Distractors: Incorporate the Carry Bug option (`correctAnswer - 10`).
-  - Progression: Transition to Level 3 when Level 2 is won.
+  - Progression: Transition to Level 4 when Level 3 is won.
 - **Testing Criterion:** Verify all equations force a carry, Aero's spinning on his legs and wavy tornado travel function properly, and the Carry Bug distractor triggers correctly.
 
-### Phase 5: Level 4 - Forced Borrow Subtraction
+### Phase 6: Level 5 - Forced Borrow Subtraction
 
-- **Scope:** Implement ONLY Level 4 mechanics.
+- **Scope:** Implement ONLY Level 5 mechanics.
 - **Key Elements:**
   - Active Hero: **Aero** (Cyclone Blast attack animation: spinning green atmospheric vortex).
   - Math Engine: Generate subtraction equations that strictly force a borrow from the tens column.
-  - Progression: Transition to Level 4 when Level 3 is won.
+  - Progression: Transition to Level 5 when Level 4 is won.
 - **Testing Criterion:** Verify all subtraction equations force a borrow, Aero's cyclone vortex animation behaves correctly, and progression transitions properly.

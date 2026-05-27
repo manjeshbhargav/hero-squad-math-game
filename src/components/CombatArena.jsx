@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { generateLevel1Addition, generateLevel1Subtraction, generateLevel2Addition, generateChoices } from '../utils/MathEngine';
+import { generateSingleDigitAddition, generateLevel1Addition, generateLevel1Subtraction, generateLevel2Addition, generateChoices } from '../utils/MathEngine';
 import DashVector from './vectors/DashVector';
 import TitanVector from './vectors/TitanVector';
 import AeroVector from './vectors/AeroVector';
@@ -7,9 +7,9 @@ import GlitchBotVector from './vectors/GlitchBotVector';
 import { Award, AlertCircle, ArrowLeft, RefreshCw } from 'lucide-react';
 
 export default function CombatArena({ onBack }) {
-  const [currentLevel, setCurrentLevel] = useState(1); // 1 | 2 | 3
+  const [currentLevel, setCurrentLevel] = useState(1); // 1 | 2 | 3 | 4
   const [gameState, setGameState] = useState(() => {
-    const initialPuzzle = generateLevel1Addition();
+    const initialPuzzle = generateSingleDigitAddition();
     return {
       puzzle: initialPuzzle,
       choices: generateChoices(initialPuzzle)
@@ -51,13 +51,15 @@ export default function CombatArena({ onBack }) {
   const loadNewPuzzle = (level = currentLevel) => {
     let newPuzzle;
     if (level === 1) {
-      newPuzzle = generateLevel1Addition();
+      newPuzzle = generateSingleDigitAddition();
     } else if (level === 2) {
-      newPuzzle = generateLevel1Subtraction();
+      newPuzzle = generateLevel1Addition();
     } else if (level === 3) {
+      newPuzzle = generateLevel1Subtraction();
+    } else if (level === 4) {
       newPuzzle = generateLevel2Addition();
     } else {
-      newPuzzle = generateLevel1Addition();
+      newPuzzle = generateSingleDigitAddition();
     }
     setGameState({
       puzzle: newPuzzle,
@@ -77,7 +79,7 @@ export default function CombatArena({ onBack }) {
       const newHealth = Math.max(0, enemyHealth - 25);
 
       // Timed screen shake, damage, and pushback based on active hero/level timing
-      if (currentLevel === 2) {
+      if (currentLevel === 3) {
         // Titan's slam impact
         setTimeout(() => {
           setScreenShake(true);
@@ -91,7 +93,7 @@ export default function CombatArena({ onBack }) {
           setEnemyHealth(newHealth);
           setEnemyProgress((prev) => Math.max(0, prev - 10));
         }, 800);
-      } else if (currentLevel === 3) {
+      } else if (currentLevel === 4) {
         // Aero's wind cyclone travel & hit
         setTimeout(() => {
           setScreenShake(true);
@@ -122,7 +124,7 @@ export default function CombatArena({ onBack }) {
       // Correct answer adds 10 to score
       setScore((prev) => prev + 10);
 
-      const attackDuration = currentLevel === 2 ? 1200 : currentLevel === 3 ? 1250 : 1000;
+      const attackDuration = currentLevel === 3 ? 1200 : currentLevel === 4 ? 1250 : 1000;
 
       setTimeout(() => {
         setIsHit(false);
@@ -208,12 +210,13 @@ export default function CombatArena({ onBack }) {
             </button>
             <div className="text-left">
               <h2 className="font-display text-sm md:text-base font-bold text-cyan-400 uppercase tracking-wider">
-                {currentLevel === 1 && 'Sector 09: Addition'}
-                {currentLevel === 2 && 'Sector 09: Subtraction'}
-                {currentLevel === 3 && 'Sector 09: Carry Addition'}
+                {currentLevel === 1 && 'Sector 09: Single Digit Addition'}
+                {currentLevel === 2 && 'Sector 09: Addition'}
+                {currentLevel === 3 && 'Sector 09: Subtraction'}
+                {currentLevel === 4 && 'Sector 09: Carry Addition'}
               </h2>
               <span className="text-[10px] font-mono text-slate-500 uppercase tracking-widest block">
-                Hero: {currentLevel === 1 ? 'Dash' : currentLevel === 2 ? 'Titan' : 'Aero'} // Level {currentLevel}
+                Hero: {(currentLevel === 1 || currentLevel === 2) ? 'Dash' : currentLevel === 3 ? 'Titan' : 'Aero'} // Level {currentLevel}
               </span>
             </div>
           </div>
@@ -237,7 +240,7 @@ export default function CombatArena({ onBack }) {
           <div className="checkered-finish-line" />
 
           {/* Volt Strike Lightning Bolt (Addition) */}
-          {animationState === 'attacking' && currentLevel === 1 && (
+          {animationState === 'attacking' && (currentLevel === 1 || currentLevel === 2) && (
             <svg
               className="volt-strike-container glow-yellow-lightning animate-lightning-bolt"
               style={{
@@ -297,8 +300,8 @@ export default function CombatArena({ onBack }) {
             </svg>
           )}
 
-          {/* Quake Smash Kinetic Shockwave (Level 2) */}
-          {animationState === 'attacking' && currentLevel === 2 && (
+          {/* Quake Smash Kinetic Shockwave (Level 3) */}
+          {animationState === 'attacking' && currentLevel === 3 && (
             <div 
               className="quake-shockwave-rings-container"
               style={{
@@ -311,8 +314,8 @@ export default function CombatArena({ onBack }) {
             </div>
           )}
 
-          {/* Aero's Cyclone Blast (Level 3) */}
-          {animationState === 'attacking' && currentLevel === 3 && (
+          {/* Aero's Cyclone Blast (Level 4) */}
+          {animationState === 'attacking' && currentLevel === 4 && (
             <div 
               className="cyclone-blast-container"
               style={{
@@ -364,13 +367,13 @@ export default function CombatArena({ onBack }) {
             animationState === 'attacking' ? 'scale-110 z-30' : ''
           }`}>
             <div className="w-28 h-36">
-              {currentLevel === 1 && (
+              {(currentLevel === 1 || currentLevel === 2) && (
                 <DashVector state={animationState === 'attacking' ? 'attack' : 'idle'} />
               )}
-              {currentLevel === 2 && (
+              {currentLevel === 3 && (
                 <TitanVector state={animationState === 'attacking' ? 'attack' : 'idle'} />
               )}
-              {currentLevel === 3 && (
+              {currentLevel === 4 && (
                 <AeroVector state={animationState === 'attacking' ? 'attack' : 'idle'} />
               )}
             </div>
@@ -478,18 +481,20 @@ export default function CombatArena({ onBack }) {
                 <Award size={48} />
               </div>
               <h3 className="font-display font-black text-green-400 text-xl tracking-wider uppercase pt-2">
-                {currentLevel === 1 && 'LEVEL 1 ADDITION MASTERED!'}
-                {currentLevel === 2 && 'LEVEL 2 SUBTRACTION MASTERED!'}
-                {currentLevel === 3 && 'LEVEL 3 CARRY ADDITION MASTERED!'}
+                {currentLevel === 1 && 'LEVEL 1 SINGLE DIGIT ADDITION MASTERED!'}
+                {currentLevel === 2 && 'LEVEL 2 ADDITION MASTERED!'}
+                {currentLevel === 3 && 'LEVEL 3 SUBTRACTION MASTERED!'}
+                {currentLevel === 4 && 'LEVEL 4 CARRY ADDITION MASTERED!'}
               </h3>
               <span className="font-mono text-xs text-slate-500">MISSION COMPLETED SUCCESSFULLY</span>
             </div>
 
             <div className="space-y-3 py-2 text-slate-300 text-sm leading-relaxed font-sans font-medium">
               <p>
-                {currentLevel === 1 && 'Fantastic job! You solved the addition equations, defeated the Glitch-Bot, and protected the mainframe!'}
-                {currentLevel === 2 && 'Fantastic job! You solved the subtraction equations, defeated the Glitch-Bot, and protected the mainframe!'}
-                {currentLevel === 3 && 'Fantastic job! You solved the carry addition equations, defeated the Glitch-Bot, and protected the mainframe!'}
+                {currentLevel === 1 && 'Fantastic job! You solved the single digit addition equations, defeated the Glitch-Bot, and protected the mainframe!'}
+                {currentLevel === 2 && 'Fantastic job! You solved the addition equations, defeated the Glitch-Bot, and protected the mainframe!'}
+                {currentLevel === 3 && 'Fantastic job! You solved the subtraction equations, defeated the Glitch-Bot, and protected the mainframe!'}
+                {currentLevel === 4 && 'Fantastic job! You solved the carry addition equations, defeated the Glitch-Bot, and protected the mainframe!'}
               </p>
               <div className="border border-slate-800 p-3 bg-slate-950/40 strict-rounded flex flex-col gap-3">
                 <div className="flex justify-center">
@@ -499,9 +504,10 @@ export default function CombatArena({ onBack }) {
                   </div>
                 </div>
                 <div className="text-xs text-slate-400 border-t border-slate-800/40 pt-2 text-center">
-                  {currentLevel === 1 && 'Level 1 Addition complete! Prepare for Subtraction.'}
-                  {currentLevel === 2 && 'Level 2 Subtraction complete! Prepare for Forced Carry Addition.'}
-                  {currentLevel === 3 && 'Level 4 (Forced Borrow Subtraction) is currently locked. Deploy Phase 5 to begin borrow operations.'}
+                  {currentLevel === 1 && 'Level 1 Single Digit Addition complete! Prepare for Addition.'}
+                  {currentLevel === 2 && 'Level 2 Addition complete! Prepare for Subtraction.'}
+                  {currentLevel === 3 && 'Level 3 Subtraction complete! Prepare for Forced Carry Addition.'}
+                  {currentLevel === 4 && 'Level 5 (Forced Borrow Subtraction) is currently locked. Deploy Phase 6 to begin borrow operations.'}
                 </div>
               </div>
             </div>
@@ -513,7 +519,7 @@ export default function CombatArena({ onBack }) {
                     onClick={handleReset}
                     className="px-5 py-3 bg-slate-950 border border-slate-800 text-slate-400 hover:border-slate-500 hover:text-white font-mono text-xs uppercase strict-rounded transition-colors cursor-pointer font-bold flex-1"
                   >
-                    Reset Addition
+                    Reset Single Digit Addition
                   </button>
                   <button
                     onClick={() => {
@@ -526,7 +532,7 @@ export default function CombatArena({ onBack }) {
                     }}
                     className="px-5 py-3 bg-green-950 border border-green-500 text-green-400 hover:bg-green-900 font-mono text-xs uppercase strict-rounded transition-colors cursor-pointer font-bold flex-1"
                   >
-                    Next Level: Subtraction
+                    Next Level: Addition
                   </button>
                 </>
               )}
@@ -536,7 +542,7 @@ export default function CombatArena({ onBack }) {
                     onClick={handleReset}
                     className="px-5 py-3 bg-slate-950 border border-slate-800 text-slate-400 hover:border-slate-500 hover:text-white font-mono text-xs uppercase strict-rounded transition-colors cursor-pointer font-bold flex-1"
                   >
-                    Reset Subtraction
+                    Reset Addition
                   </button>
                   <button
                     onClick={() => {
@@ -549,11 +555,34 @@ export default function CombatArena({ onBack }) {
                     }}
                     className="px-5 py-3 bg-green-950 border border-green-500 text-green-400 hover:bg-green-900 font-mono text-xs uppercase strict-rounded transition-colors cursor-pointer font-bold flex-1"
                   >
-                    Next Level: Carry Addition
+                    Next Level: Subtraction
                   </button>
                 </>
               )}
               {currentLevel === 3 && (
+                <>
+                  <button
+                    onClick={handleReset}
+                    className="px-5 py-3 bg-slate-950 border border-slate-800 text-slate-400 hover:border-slate-500 hover:text-white font-mono text-xs uppercase strict-rounded transition-colors cursor-pointer font-bold flex-1"
+                  >
+                    Reset Subtraction
+                  </button>
+                  <button
+                    onClick={() => {
+                      setCurrentLevel(4);
+                      setEnemyHealth(100);
+                      setEnemyProgress(0);
+                      setIsMastered(false);
+                      setIsGameOver(false);
+                      loadNewPuzzle(4);
+                    }}
+                    className="px-5 py-3 bg-green-950 border border-green-500 text-green-400 hover:bg-green-900 font-mono text-xs uppercase strict-rounded transition-colors cursor-pointer font-bold flex-1"
+                  >
+                    Next Level: Carry Addition
+                  </button>
+                </>
+              )}
+              {currentLevel === 4 && (
                 <>
                   <button
                     onClick={handleReset}
