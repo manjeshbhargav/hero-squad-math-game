@@ -1,4 +1,4 @@
-const CACHE_NAME = 'math-hero-squad-v10';
+const CACHE_NAME = 'math-hero-squad-v11';
 const PRECACHE_ASSETS = [
   './',
   './index.html',
