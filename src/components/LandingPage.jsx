@@ -232,59 +232,67 @@ export default function LandingPage({ onStart }) {
               </button>
 
               {/* Character Card Slot with split text/vector layout */}
-              {currentChar && (
-                <div
-                  className={`w-full p-5 sm:p-6 bg-slate-950/50 backdrop-blur-md border strict-rounded transition-all duration-300 shadow-2xl flex flex-col md:flex-row gap-6 justify-between items-stretch min-h-[380px] md:min-h-[340px] ${currentChar.bgBorderClass}`}
-                >
-                  {/* Left Column: Dossier text */}
-                  <div className="flex-1 flex flex-col justify-between space-y-4 text-left">
-                    <div className="space-y-4">
-                      <div className="flex justify-between items-start gap-2">
-                        <div className="flex items-center gap-3">
-                          <div className={`p-2 bg-slate-900/80 border border-slate-800 strict-rounded ${currentChar.colorClass}`}>
-                            {React.createElement(currentChar.icon, { size: 20 })}
-                          </div>
-                          <div>
-                            <h3 className="font-display font-black text-white text-xl sm:text-2xl leading-tight">
-                              {currentChar.name}
-                            </h3>
-                            <span className={`text-xs font-mono tracking-wider uppercase font-bold ${currentChar.colorClass}`}>
-                              {currentChar.role}
-                            </span>
+              <div className="grid grid-cols-1 grid-rows-1 flex-1">
+                {characters.map((char, idx) => (
+                  <div
+                    key={char.id}
+                    className={`col-start-1 row-start-1 w-full p-5 sm:p-6 bg-slate-950/50 backdrop-blur-md border strict-rounded transition-all duration-300 shadow-2xl flex flex-col md:flex-row gap-6 justify-between items-stretch min-h-[380px] md:min-h-[340px] ${
+                      idx === activeIndex
+                        ? 'opacity-100 pointer-events-auto z-10'
+                        : 'opacity-0 pointer-events-none z-0'
+                    } ${char.bgBorderClass}`}
+                  >
+                    {/* Left Column: Dossier text */}
+                    <div className="flex-1 flex flex-col justify-between space-y-4 text-left">
+                      <div className="space-y-4">
+                        <div className="flex justify-between items-start gap-2">
+                          <div className="flex items-center gap-3">
+                            <div className={`p-2 bg-slate-900/80 border border-slate-800 strict-rounded ${char.colorClass}`}>
+                              {React.createElement(char.icon, { size: 20 })}
+                            </div>
+                            <div>
+                              <h3 className="font-display font-black text-white text-xl sm:text-2xl leading-tight">
+                                {char.name}
+                              </h3>
+                              <span className={`text-xs font-mono tracking-wider uppercase font-bold ${char.colorClass}`}>
+                                {char.role}
+                              </span>
+                            </div>
                           </div>
                         </div>
-                        <span className="text-xs font-mono text-slate-300 border border-slate-800/80 px-2.5 py-0.5 strict-rounded bg-slate-950 font-semibold shrink-0">
-                          {currentChar.badge}
-                        </span>
+
+                        <p className="text-base sm:text-lg text-slate-200 leading-relaxed font-sans font-medium">
+                          {char.description}
+                        </p>
                       </div>
 
-                      <p className="text-base sm:text-lg text-slate-200 leading-relaxed font-sans font-medium">
-                        {currentChar.description}
-                      </p>
+                      <div className="mt-4 pt-4 border-t border-slate-900/60 text-xs sm:text-sm font-mono space-y-2 text-slate-300">
+                        <div>
+                          <span className="text-slate-500 font-bold">GEAR:</span> {char.suit}
+                        </div>
+                        <div>
+                          <span className="text-slate-500 font-bold">STRIKE:</span> {char.weapon}
+                        </div>
+                      </div>
                     </div>
 
-                    <div className="mt-4 pt-4 border-t border-slate-900/60 text-xs sm:text-sm font-mono space-y-2 text-slate-300">
-                      <div>
-                        <span className="text-slate-500 font-bold">GEAR:</span> {currentChar.suit}
-                      </div>
-                      <div>
-                        <span className="text-slate-500 font-bold">STRIKE:</span> {currentChar.weapon}
+                    {/* Right Column: Live 2D Vector Puppet */}
+                    <div className="relative w-full md:w-40 flex items-center justify-center bg-slate-950/40 border border-slate-900/40 p-2 strict-rounded min-h-[180px] md:min-h-0">
+                      {/* Level Label Overlay */}
+                      <span className="absolute -top-2.5 left-1/2 transform -translate-x-1/2 text-[10px] font-mono text-slate-300 border border-slate-800/80 px-2 py-0.5 strict-rounded bg-slate-950 font-bold tracking-wider whitespace-nowrap z-10">
+                        {char.badge}
+                      </span>
+                      <div className="w-32 h-44">
+                        {char.id === 'dash' && <DashVector state="idle" />}
+                        {char.id === 'titan' && <TitanVector state="idle" />}
+                        {char.id === 'aero' && <AeroVector state="idle" />}
+                        {char.id === 'drnull' && <DrNullVector state="idle" />}
                       </div>
                     </div>
+
                   </div>
-
-                  {/* Right Column: Live 2D Vector Puppet */}
-                  <div className="w-full md:w-40 flex items-center justify-center bg-slate-950/40 border border-slate-900/40 p-2 strict-rounded min-h-[180px] md:min-h-0">
-                    <div className="w-32 h-44">
-                      {currentChar.id === 'dash' && <DashVector state="idle" />}
-                      {currentChar.id === 'titan' && <TitanVector state="idle" />}
-                      {currentChar.id === 'aero' && <AeroVector state="idle" />}
-                      {currentChar.id === 'drnull' && <DrNullVector state="idle" />}
-                    </div>
-                  </div>
-
-                </div>
-              )}
+                ))}
+              </div>
 
               {/* Next Button */}
               <button
