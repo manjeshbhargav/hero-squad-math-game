@@ -61,16 +61,23 @@ export default function DrNullVector({ className = '', state = 'idle', children 
           
           {/* Spiked white mad scientist hair */}
           <path d="M42 30 Q30 5 44 20 Q48 -5 54 22 Q68 5 58 30 Q54 34 44 32 Z" fill="#f3f4f6" />
+
+          {/* Menacing eyebrows */}
+          <line x1="41" y1="31" x2="47" y2="33" stroke="#374151" strokeWidth="1.2" strokeLinecap="round" />
+          <line x1="57" y1="31" x2="51" y2="33" stroke="#374151" strokeWidth="1.2" strokeLinecap="round" />
           
           {/* Cybernetic glowing green monocle eye */}
           <circle cx="46" cy="36" r="3.5" fill="#10b981" filter="drop-shadow(0 0 2px #10b981)" />
           <line x1="38" y1="36" x2="43" y2="36" stroke="#475569" strokeWidth="1" />
           
-          {/* Normal eye */}
-          <circle cx="54" cy="36" r="1.5" fill="#374151" />
+          {/* Glowing red exposed eye */}
+          <circle cx="54" cy="36" r="1.5" fill="#ef4444" filter="drop-shadow(0 0 1.5px #ef4444)" />
           
-          {/* Sinister grin */}
-          <path d="M46 43 Q50 48 54 43" stroke="#9d174d" strokeWidth="1.5" strokeLinecap="round" fill="none" />
+          {/* Menacing grin showing teeth */}
+          <path d="M45 42 Q50 49 55 42 Q50 44 45 42" fill="#ffffff" stroke="#9d174d" strokeWidth="1" strokeLinecap="round" />
+          <line x1="48" y1="43" x2="48" y2="45" stroke="#9d174d" strokeWidth="0.8" />
+          <line x1="50" y1="43.5" x2="50" y2="46" stroke="#9d174d" strokeWidth="0.8" />
+          <line x1="52" y1="43" x2="52" y2="45" stroke="#9d174d" strokeWidth="0.8" />
         </g>
 
         {/* CRT Display Container (Rendered last to stay on top of everything) */}
