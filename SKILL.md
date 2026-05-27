@@ -160,6 +160,6 @@ To facilitate iterative verification and human testing, development is structure
 - **Key Elements:**
   - Active Hero: **Aero** (Cyclone Blast attack animation: spinning green atmospheric vortex).
   - Math Engine: Generate subtraction equations that strictly force a borrow from the tens column.
-  - Combat & Progression: Plays the incorrect answer sound effect (`wrong-answer.mp3`) on incorrect selection.
+  - Combat & Progression: Plays the incorrect answer sound effect (`wrong-answer.mp3`) on incorrect selection and plays the Cyclone Blast sound effect (`aero-whirlwind.mp3`) when Aero launches a whirlwind.
   - Progression: Transition to Level 5 when Level 4 is won.
 - **Testing Criterion:** Verify all subtraction equations force a borrow, Aero's cyclone vortex animation behaves correctly, verify incorrect answer sound effect plays on error, and progression transitions properly.

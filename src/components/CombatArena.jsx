@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { generateSingleDigitAddition, generateLevel1Addition, generateLevel1Subtraction, generateLevel2Addition, generateChoices } from '../utils/MathEngine';
+import { generateSingleDigitAddition, generateLevel1Addition, generateLevel1Subtraction, generateLevel2Addition, generateLevel5Subtraction, generateChoices } from '../utils/MathEngine';
 import DashVector from './vectors/DashVector';
 import TitanVector from './vectors/TitanVector';
 import AeroVector from './vectors/AeroVector';
@@ -32,7 +32,7 @@ const aeroWhirlwindAudio = new Audio(aeroWhirlwindSound);
 aeroWhirlwindAudio.preload = 'auto';
 
 export default function CombatArena({ onBack }) {
-  const [currentLevel, setCurrentLevel] = useState(1); // 1 | 2 | 3 | 4
+  const [currentLevel, setCurrentLevel] = useState(1); // 1 | 2 | 3 | 4 | 5
   const [gameState, setGameState] = useState(() => {
     const initialPuzzle = generateSingleDigitAddition();
     return {
@@ -91,6 +91,8 @@ export default function CombatArena({ onBack }) {
       newPuzzle = generateLevel1Subtraction();
     } else if (level === 4) {
       newPuzzle = generateLevel2Addition();
+    } else if (level === 5) {
+      newPuzzle = generateLevel5Subtraction();
     } else {
       newPuzzle = generateSingleDigitAddition();
     }
@@ -129,7 +131,7 @@ export default function CombatArena({ onBack }) {
           setEnemyHealth(newHealth);
           setEnemyProgress((prev) => Math.max(0, prev - 10));
         }, 800);
-      } else if (currentLevel === 4) {
+      } else if (currentLevel === 4 || currentLevel === 5) {
         // Aero's wind cyclone travel & hit
         aeroWhirlwindAudio.currentTime = 0;
         aeroWhirlwindAudio.play().catch((err) => console.log('Audio playback error:', err));
@@ -166,7 +168,7 @@ export default function CombatArena({ onBack }) {
       // Correct answer adds 10 to score
       setScore((prev) => prev + 10);
 
-      const attackDuration = currentLevel === 3 ? 1200 : currentLevel === 4 ? 1250 : 1000;
+      const attackDuration = currentLevel === 3 ? 1200 : (currentLevel === 4 || currentLevel === 5) ? 1250 : 1000;
 
       setTimeout(() => {
         setIsHit(false);
@@ -261,6 +263,7 @@ export default function CombatArena({ onBack }) {
                 {currentLevel === 2 && 'Sector 09: Addition'}
                 {currentLevel === 3 && 'Sector 09: Subtraction'}
                 {currentLevel === 4 && 'Sector 09: Carry Addition'}
+                {currentLevel === 5 && 'Sector 09: Borrow Subtraction'}
               </h2>
               <span className="text-[10px] font-mono text-slate-500 uppercase tracking-widest block">
                 Hero: {(currentLevel === 1 || currentLevel === 2) ? 'Dash' : currentLevel === 3 ? 'Titan' : 'Aero'} // Level {currentLevel}
@@ -361,8 +364,8 @@ export default function CombatArena({ onBack }) {
             </div>
           )}
 
-          {/* Aero's Cyclone Blast (Level 4) */}
-          {animationState === 'attacking' && currentLevel === 4 && (
+          {/* Aero's Cyclone Blast (Level 4 & 5) */}
+          {animationState === 'attacking' && (currentLevel === 4 || currentLevel === 5) && (
             <div 
               className="cyclone-blast-container"
               style={{
@@ -420,7 +423,7 @@ export default function CombatArena({ onBack }) {
               {currentLevel === 3 && (
                 <TitanVector state={animationState === 'attacking' ? 'attack' : 'idle'} />
               )}
-              {currentLevel === 4 && (
+              {(currentLevel === 4 || currentLevel === 5) && (
                 <AeroVector state={animationState === 'attacking' ? 'attack' : 'idle'} />
               )}
             </div>
@@ -532,6 +535,7 @@ export default function CombatArena({ onBack }) {
                 {currentLevel === 2 && 'LEVEL 2 ADDITION MASTERED!'}
                 {currentLevel === 3 && 'LEVEL 3 SUBTRACTION MASTERED!'}
                 {currentLevel === 4 && 'LEVEL 4 CARRY ADDITION MASTERED!'}
+                {currentLevel === 5 && 'LEVEL 5 FORCED BORROW SUBTRACTION MASTERED!'}
               </h3>
               <span className="font-mono text-xs text-slate-500">MISSION COMPLETED SUCCESSFULLY</span>
             </div>
@@ -542,6 +546,7 @@ export default function CombatArena({ onBack }) {
                 {currentLevel === 2 && 'Fantastic job! You solved the addition equations, defeated the Glitch-Bot, and protected the mainframe!'}
                 {currentLevel === 3 && 'Fantastic job! You solved the subtraction equations, defeated the Glitch-Bot, and protected the mainframe!'}
                 {currentLevel === 4 && 'Fantastic job! You solved the carry addition equations, defeated the Glitch-Bot, and protected the mainframe!'}
+                {currentLevel === 5 && 'Fantastic job! You solved the borrow subtraction equations, defeated the Glitch-Bot, and protected the mainframe!'}
               </p>
               <div className="border border-slate-800 p-3 bg-slate-950/40 strict-rounded flex flex-col gap-3">
                 <div className="flex justify-center">
@@ -554,7 +559,8 @@ export default function CombatArena({ onBack }) {
                   {currentLevel === 1 && 'Level 1 Single Digit Addition complete! Prepare for Addition.'}
                   {currentLevel === 2 && 'Level 2 Addition complete! Prepare for Subtraction.'}
                   {currentLevel === 3 && 'Level 3 Subtraction complete! Prepare for Forced Carry Addition.'}
-                  {currentLevel === 4 && 'Level 5 (Forced Borrow Subtraction) is currently locked. Deploy Phase 6 to begin borrow operations.'}
+                  {currentLevel === 4 && 'Level 4 Carry Addition complete! Prepare for Forced Borrow Subtraction.'}
+                  {currentLevel === 5 && 'All math defense training levels complete! Math Hero Squad operations fully online.'}
                 </div>
               </div>
             </div>
@@ -636,6 +642,29 @@ export default function CombatArena({ onBack }) {
                     className="px-5 py-3 bg-slate-950 border border-slate-800 text-slate-400 hover:border-slate-500 hover:text-white font-mono text-xs uppercase strict-rounded transition-colors cursor-pointer font-bold flex-1"
                   >
                     Reset Carry Addition
+                  </button>
+                  <button
+                    onClick={() => {
+                      setCurrentLevel(5);
+                      setEnemyHealth(100);
+                      setEnemyProgress(0);
+                      setIsMastered(false);
+                      setIsGameOver(false);
+                      loadNewPuzzle(5);
+                    }}
+                    className="px-5 py-3 bg-green-950 border border-green-500 text-green-400 hover:bg-green-900 font-mono text-xs uppercase strict-rounded transition-colors cursor-pointer font-bold flex-1"
+                  >
+                    Next Level: Borrow Subtraction
+                  </button>
+                </>
+              )}
+              {currentLevel === 5 && (
+                <>
+                  <button
+                    onClick={handleReset}
+                    className="px-5 py-3 bg-slate-950 border border-slate-800 text-slate-400 hover:border-slate-500 hover:text-white font-mono text-xs uppercase strict-rounded transition-colors cursor-pointer font-bold flex-1"
+                  >
+                    Reset Borrow Subtraction
                   </button>
                   <button
                     onClick={onBack}

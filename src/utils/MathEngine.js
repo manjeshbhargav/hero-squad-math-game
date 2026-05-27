@@ -138,6 +138,39 @@ export const generateLevel2Addition = () => {
 };
 
 /**
+ * Generates Level 5 Forced Borrow Subtraction equations:
+ * - Combined ones place digits require a borrow (onesA < onesB)
+ * - Result in tens place is positive (tensA > tensB)
+ */
+export const generateLevel5Subtraction = () => {
+  // onesA: Random integer between 0 and 8
+  const onesA = Math.floor(Math.random() * 9);
+  // onesB: Bounded randomly between (onesA + 1) and 9
+  const minOnesB = onesA + 1;
+  const onesB = Math.floor(Math.random() * (10 - minOnesB)) + minOnesB;
+
+  // tensA: Random integer between 2 and 9
+  const tensA = Math.floor(Math.random() * 8) + 2;
+  // tensB: Bounded randomly between 1 and (tensA - 1)
+  const tensB = Math.floor(Math.random() * (tensA - 1)) + 1;
+
+  const numA = tensA * 10 + onesA;
+  const numB = tensB * 10 + onesB;
+  const correctAnswer = numA - numB;
+
+  return {
+    numA,
+    numB,
+    operation: 'subtraction',
+    correctAnswer,
+    onesA,
+    onesB,
+    tensA,
+    tensB
+  };
+};
+
+/**
  * Generates four unique choices including custom educational distractors.
  * @param {Object} puzzle 
  * @returns {Array} Shuffled choices
