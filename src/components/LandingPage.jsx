@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Zap, ShieldAlert, Wind, Skull, Play, X, Info, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Zap, ShieldAlert, Wind, Skull, Play, X, Info, ChevronLeft, ChevronRight, Bot } from 'lucide-react';
 import DashVector from './vectors/DashVector';
 import TitanVector from './vectors/TitanVector';
 import AeroVector from './vectors/AeroVector';
 import DrNullVector from './vectors/DrNullVector';
+import GlitchBotVector from './vectors/GlitchBotVector';
 import introMusic from '../assets/intro.mp3';
 
 const audio = new Audio(introMusic);
@@ -89,6 +90,34 @@ export default function LandingPage({ onStart }) {
 
   const characters = [
     {
+      id: 'drnull',
+      name: 'Dr. Null',
+      role: 'The Villain',
+      description: 'A mad scientist sending blocky Glitch-Bots to defeat the heroes with math problems!',
+      suit: 'Floating scientist lab robes.',
+      weapon: 'Glitch-Bots: Evil blocky robots with math problems on their bodies.',
+      icon: Skull,
+      colorClass: 'text-purple-400',
+      bgBorderClass: 'border-purple-500/40 hover:border-purple-400 hover:shadow-[0_0_15px_rgba(168,85,247,0.4)]',
+      glowClass: 'glow-purple',
+      badge: 'Villain Boss',
+      type: 'villain'
+    },
+    {
+      id: 'glitchbot',
+      name: 'Glitch-Bot',
+      role: 'The Minion',
+      description: 'Evil blocky robots sent by Dr. Null to defeat the heroes with tricky math problems!',
+      suit: 'Iron chassis with vintage CRT screen body.',
+      weapon: 'Wrong answer: Advances rapidly to defeat the heroes.',
+      icon: Bot,
+      colorClass: 'text-rose-400',
+      bgBorderClass: 'border-rose-500/40 hover:border-rose-400 hover:shadow-[0_0_15px_rgba(244,63,94,0.4)]',
+      glowClass: 'glow-rose',
+      badge: 'Robot Minion',
+      type: 'minion'
+    },
+    {
       id: 'dash',
       name: 'Dash',
       role: 'The Speedster',
@@ -129,20 +158,6 @@ export default function LandingPage({ onStart }) {
       glowClass: 'glow-green',
       badge: 'Levels 4-5 Hero',
       type: 'hero'
-    },
-    {
-      id: 'drnull',
-      name: 'Dr. Null',
-      role: 'The Villain',
-      description: 'A mad scientist sending blocky Glitch-Bots to mess up the city\'s math server!',
-      suit: 'Floating scientist lab robes.',
-      weapon: 'Glitch-Bots: Evil blocky robots with math puzzles on their chests.',
-      icon: Skull,
-      colorClass: 'text-purple-400',
-      bgBorderClass: 'border-purple-500/40 hover:border-purple-400 hover:shadow-[0_0_15px_rgba(168,85,247,0.4)]',
-      glowClass: 'glow-purple',
-      badge: 'Villain Boss',
-      type: 'villain'
     }
   ];
 
@@ -212,7 +227,7 @@ export default function LandingPage({ onStart }) {
         <section className="lg:col-span-7 flex flex-col space-y-6">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-800/80 pb-3 gap-3">
             <h2 className="font-display text-xl font-bold tracking-widest text-slate-200 uppercase mx-auto lg:mx-0 text-center lg:text-left">
-              Meet the Squad
+              Characters
             </h2>
           </div>
 
@@ -287,6 +302,14 @@ export default function LandingPage({ onStart }) {
                         {char.id === 'titan' && <TitanVector state="idle" />}
                         {char.id === 'aero' && <AeroVector state="idle" />}
                         {char.id === 'drnull' && <DrNullVector state="idle" />}
+                        {char.id === 'glitchbot' && (
+                          <GlitchBotVector state="idle">
+                            <div className="font-display font-black text-sm text-cyan-400 tracking-wider leading-none text-center">
+                              5 <br />
+                              <span className="text-yellow-400 font-bold">+</span>3
+                            </div>
+                          </GlitchBotVector>
+                        )}
                       </div>
                     </div>
 
