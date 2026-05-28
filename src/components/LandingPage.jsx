@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Zap, ShieldAlert, Wind, Skull, Play, X, Info, ChevronLeft, ChevronRight, Bot } from 'lucide-react';
-import DashVector from './vectors/DashVector';
-import TitanVector from './vectors/TitanVector';
-import AeroVector from './vectors/AeroVector';
+import { Skull, Play, X, Info, ChevronLeft, ChevronRight, Bot, ShieldAlert } from 'lucide-react';
+import Hero from '../utils/Hero';
 import DrNullVector from './vectors/DrNullVector';
 import GlitchBotVector from './vectors/GlitchBotVector';
 import introMusic from '../assets/intro.mp3';
@@ -117,53 +115,11 @@ export default function LandingPage({ onStart }) {
       badge: 'Robot Minion',
       type: 'minion'
     },
-    {
-      id: 'dash',
-      name: 'Dash',
-      role: 'The Speedster',
-      description: 'Uses lightning-fast speed to zaps Glitch-Bots with electricity!',
-      suit: 'Blue and yellow lightning suit.',
-      weapon: 'Volt Strike: Zaps yellow lightning straight across the screen.',
-      icon: Zap,
-      colorClass: 'text-yellow-400',
-      bgBorderClass: 'border-yellow-500/40 hover:border-yellow-400 hover:shadow-[0_0_15px_rgba(234,179,8,0.4)]',
-      glowClass: 'glow-yellow',
-      badge: 'Levels 1-2 Hero',
-      type: 'hero'
-    },
-    {
-      id: 'titan',
-      name: 'Titan',
-      role: 'The Heavy Brawler',
-      description: 'A super-strong hero who smashes Glitch-Bots with floor-shaking force during subtraction!',
-      suit: 'Red and silver armored suit.',
-      weapon: 'Quake Smash: Shakes the floor to push back robots.',
-      icon: ShieldAlert,
-      colorClass: 'text-red-500',
-      bgBorderClass: 'border-red-600/40 hover:border-red-500 hover:shadow-[0_0_15px_rgba(239,68,68,0.4)]',
-      glowClass: 'glow-red',
-      badge: 'Level 3 Hero',
-      type: 'hero'
-    },
-    {
-      id: 'aero',
-      name: 'Aero',
-      role: 'The Tactical Flyer',
-      description: 'Flies high and uses green cyclone wind power to carry numbers when addition equations get heavy!',
-      suit: 'Green and white wing-suit.',
-      weapon: 'Cyclone Blast: Shoots a spinning green tornado at targets.',
-      icon: Wind,
-      colorClass: 'text-emerald-400',
-      bgBorderClass: 'border-emerald-500/40 hover:border-emerald-400 hover:shadow-[0_0_15px_rgba(52,211,153,0.4)]',
-      glowClass: 'glow-green',
-      badge: 'Levels 4-5 Hero',
-      type: 'hero'
-    }
+    ...Hero.getAllHeroes()
   ];
 
   // Clamp carousel index within boundaries of the characters list
   const activeIndex = Math.min(carouselIndex, Math.max(0, characters.length - 1));
-  const currentChar = characters[activeIndex];
 
   const handlePrev = () => {
     setCarouselIndex((prev) => (prev === 0 ? characters.length - 1 : prev - 1));
@@ -302,17 +258,20 @@ export default function LandingPage({ onStart }) {
                         {char.badge}
                       </span>
                       <div className="w-32 h-44">
-                        {char.id === 'dash' && <DashVector state="idle" />}
-                        {char.id === 'titan' && <TitanVector state="idle" />}
-                        {char.id === 'aero' && <AeroVector state="idle" />}
-                        {char.id === 'drnull' && <DrNullVector state="idle" />}
-                        {char.id === 'glitchbot' && (
-                          <GlitchBotVector state="idle">
-                            <div className="font-display font-black text-sm text-cyan-400 tracking-wider leading-none text-center">
-                              5 <br />
-                              <span className="text-yellow-400 font-bold">+</span>3
-                            </div>
-                          </GlitchBotVector>
+                        {char.type === 'hero' ? (
+                          React.createElement(char.vector, { state: 'idle' })
+                        ) : (
+                          <>
+                            {char.id === 'drnull' && <DrNullVector state="idle" />}
+                            {char.id === 'glitchbot' && (
+                              <GlitchBotVector state="idle">
+                                <div className="font-display font-black text-sm text-cyan-400 tracking-wider leading-none text-center">
+                                  5 <br />
+                                  <span className="text-yellow-400 font-bold">+</span>3
+                                </div>
+                              </GlitchBotVector>
+                            )}
+                          </>
                         )}
                       </div>
                     </div>

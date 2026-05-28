@@ -8,12 +8,13 @@
 - **Feature Flagging:** Deterministic data generation only. The system must operate independently of external API responses, mock generation models, or AI completion layers.
 - **Version Control Constraints:** All staging, committing, and repository-tracking operations are managed manually by human operators. Automations and agents must not run git commit commands.
 - **Responsive Design Architecture:** All user interfaces must adhere to a strict mobile-first design pattern. Spacing, padding, and layout rules must target compact mobile displays as the default, applying responsive breakpoints (`md:`, `lg:`) only to expand layouts. Global viewport clipping (`overflow-hidden`) must be disabled on mobile devices to allow natural vertical scrolling, preventing double scrollbars or truncated content.
+- **Service Worker Cache Invalidation:** Whenever any application changes are made (e.g. logic updates, styling modifications, or asset updates), the Service Worker cache version variable (`CACHE_NAME`) in `public/sw.js` must be incremented. This ensures that browsers invalidate old cached network shells, preventing visual discrepancies or stale application logic from being served.
 
 ## 2. Core State Structure Blueprint
 
-The application's runtime structure must manage level progression, user scores, character states, and equation contexts synchronously:
+The application's runtime structure must manage level progression, user scores, character states, and equation contexts synchronously. For encapsulation and clean architecture details, all hero data and combat timing structures are centralized in the [Hero Class](./HERO.md):
 
-- **Progression Tracking:** Tracks the current tier level integer (1 through 5) and handles changing hero visibility strings (`'Dash'`, `'Titan'`, `'Aero'`).
+- **Progression Tracking:** Tracks the current tier level integer (1 through 5) and maps it dynamically to the corresponding active `Hero` model instance (`Hero.getHeroForLevel(level)`).
 - **Combat & Score Metrics:**
   - `enemyHealth`: Tracks enemy structural integrity variables (0-100).
   - `enemyProgress`: Tracks enemy horizontal advancement percentage (0-100) towards the checkered finish line.

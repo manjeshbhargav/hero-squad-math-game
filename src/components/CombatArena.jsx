@@ -1,38 +1,28 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { generateSingleDigitAddition, generateLevel1Addition, generateLevel1Subtraction, generateLevel2Addition, generateLevel5Subtraction, generateLevel6Mixed, generateChoices } from '../utils/MathEngine';
-import DashVector from './vectors/DashVector';
-import TitanVector from './vectors/TitanVector';
-import AeroVector from './vectors/AeroVector';
+import Hero from '../utils/Hero';
 import GlitchBotVector from './vectors/GlitchBotVector';
 import DrNullVector from './vectors/DrNullVector';
 import { Award, AlertCircle, ArrowLeft, RefreshCw } from 'lucide-react';
-import voltStrikeSound from '../assets/dash-volt-strike.mp3';
 import wrongAnswerSound from '../assets/wrong-answer.mp3';
 import levelMasteredSound from '../assets/level-mastered.mp3';
 import levelFailedSound from '../assets/level-failed.mp3';
-
-const voltStrikeAudio = new Audio(voltStrikeSound);
-voltStrikeAudio.preload = 'auto';
-
-const wrongAnswerAudio = new Audio(wrongAnswerSound);
-wrongAnswerAudio.preload = 'auto';
-
-const levelMasteredAudio = new Audio(levelMasteredSound);
-levelMasteredAudio.preload = 'auto';
-
-const levelFailedAudio = new Audio(levelFailedSound);
-levelFailedAudio.preload = 'auto';
-
-import titanShockWaveSound from '../assets/titan-shock-wave.mp3';
-import aeroWhirlwindSound from '../assets/aero-whirlwind.mp3';
-
-const titanShockWaveAudio = new Audio(titanShockWaveSound);
-titanShockWaveAudio.preload = 'auto';
-
-const aeroWhirlwindAudio = new Audio(aeroWhirlwindSound);
-aeroWhirlwindAudio.preload = 'auto';
-
 export default function CombatArena({ onBack, initialLevel = 1 }) {
+
+  const wrongAnswerAudio = useRef(null);
+  const levelMasteredAudio = useRef(null);
+  const levelFailedAudio = useRef(null);
+
+  useEffect(() => {
+    wrongAnswerAudio.current = new Audio(wrongAnswerSound);
+    wrongAnswerAudio.current.preload = 'auto';
+
+    levelMasteredAudio.current = new Audio(levelMasteredSound);
+    levelMasteredAudio.current.preload = 'auto';
+
+    levelFailedAudio.current = new Audio(levelFailedSound);
+    levelFailedAudio.current.preload = 'auto';
+  }, []);
 
   const [currentLevel, setCurrentLevel] = useState(initialLevel); // 1 | 2 | 3 | 4 | 5 | 6
   const [gameState, setGameState] = useState(() => {
@@ -65,8 +55,6 @@ export default function CombatArena({ onBack, initialLevel = 1 }) {
   const [screenShake, setScreenShake] = useState(false);
   const [isHit, setIsHit] = useState(false);
 
-
-
   // Continuous bot movement loop
   useEffect(() => {
     if (isGameOver || isMastered || animationState !== 'idle') return;
@@ -88,10 +76,32 @@ export default function CombatArena({ onBack, initialLevel = 1 }) {
   // Game over sound effect trigger
   useEffect(() => {
     if (isGameOver) {
-      levelFailedAudio.currentTime = 0;
-      levelFailedAudio.play().catch((err) => console.log('Audio playback error:', err));
+      levelFailedAudio.current.currentTime = 0;
+      levelFailedAudio.current.play().catch((err) => console.log('Audio playback error:', err));
     }
   }, [isGameOver]);
+
+  const activeHero = useMemo(() => {
+    return Hero.getHeroForLevel(currentLevel, puzzle?.sourceLevel);
+  }, [currentLevel, puzzle?.sourceLevel]);
+
+  const loadNewPuzzle = useCallback((level = currentLevel) => {
+    const getNewPuzzle = [
+      generateSingleDigitAddition,
+      generateLevel1Addition,
+      generateLevel1Subtraction,
+      generateLevel2Addition,
+      generateLevel5Subtraction,
+      generateLevel6Mixed
+    ][level - 1] ?? generateSingleDigitAddition;
+    const newPuzzle = getNewPuzzle();
+    setGameState({
+      puzzle: newPuzzle,
+      choices: generateChoices(newPuzzle)
+    });
+    setFirstAttempt(true);
+    setIncorrectAnswers(new Set());
+  }, [currentLevel]);
 
   // Cheat codes listener
   useEffect(() => {
@@ -132,44 +142,7 @@ export default function CombatArena({ onBack, initialLevel = 1 }) {
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [currentLevel, onBack]);
-
-  const getActiveHero = () => {
-    if (currentLevel === 6) {
-      const sourceLevel = puzzle?.sourceLevel || 1;
-      if (sourceLevel === 1 || sourceLevel === 2) return 'Dash';
-      if (sourceLevel === 3) return 'Titan';
-      return 'Aero';
-    }
-    if (currentLevel === 1 || currentLevel === 2) return 'Dash';
-    if (currentLevel === 3) return 'Titan';
-    return 'Aero';
-  };
-
-  const loadNewPuzzle = (level = currentLevel) => {
-    let newPuzzle;
-    if (level === 1) {
-      newPuzzle = generateSingleDigitAddition();
-    } else if (level === 2) {
-      newPuzzle = generateLevel1Addition();
-    } else if (level === 3) {
-      newPuzzle = generateLevel1Subtraction();
-    } else if (level === 4) {
-      newPuzzle = generateLevel2Addition();
-    } else if (level === 5) {
-      newPuzzle = generateLevel5Subtraction();
-    } else if (level === 6) {
-      newPuzzle = generateLevel6Mixed();
-    } else {
-      newPuzzle = generateSingleDigitAddition();
-    }
-    setGameState({
-      puzzle: newPuzzle,
-      choices: generateChoices(newPuzzle)
-    });
-    setFirstAttempt(true);
-    setIncorrectAnswers(new Set());
-  };
+  }, [currentLevel, loadNewPuzzle, onBack]);
 
   const handleChoiceClick = (selectedAnswer) => {
     if (animationState !== 'idle' || isMastered || isGameOver) return;
@@ -180,84 +153,39 @@ export default function CombatArena({ onBack, initialLevel = 1 }) {
 
       const damageAmount = currentLevel === 6 ? 5 : 25;
       const newHealth = Math.max(0, enemyHealth - damageAmount);
-      const hero = getActiveHero();
 
-      // Timed screen shake, damage, and pushback based on active hero/level timing
-      if (hero === 'Titan') {
-        // Titan's slam impact
-        titanShockWaveAudio.currentTime = 0;
-        titanShockWaveAudio.play().catch((err) => console.log('Audio playback error:', err));
-
-        setTimeout(() => {
-          setScreenShake(true);
-        }, 500);
-        setTimeout(() => {
-          setScreenShake(false);
-        }, 900);
-
-        setTimeout(() => {
+      // Trigger combat sequence using memoized activeHero
+      activeHero.triggerAttack({
+        onShakeStart: () => setScreenShake(true),
+        onShakeEnd: () => setScreenShake(false),
+        onImpact: () => {
           setIsHit(true);
           setEnemyHealth(newHealth);
           setEnemyProgress((prev) => Math.max(0, prev - 10));
-        }, 800);
-      } else if (hero === 'Aero') {
-        // Aero's wind cyclone travel & hit
-        aeroWhirlwindAudio.currentTime = 0;
-        aeroWhirlwindAudio.play().catch((err) => console.log('Audio playback error:', err));
-
-        setTimeout(() => {
-          setScreenShake(true);
-        }, 800);
-        setTimeout(() => {
-          setScreenShake(false);
-        }, 1100);
-
-        setTimeout(() => {
-          setIsHit(true);
-          setEnemyHealth(newHealth);
-          setEnemyProgress((prev) => Math.max(0, prev - 10));
-        }, 850);
-      } else {
-        // Dash's fast electric strike
-        voltStrikeAudio.currentTime = 0;
-        voltStrikeAudio.play().catch((err) => console.log('Audio playback error:', err));
-
-        setScreenShake(true);
-        setTimeout(() => {
-          setScreenShake(false);
-        }, 400);
-
-        setTimeout(() => {
-          setIsHit(true);
-          setEnemyHealth(newHealth);
-          setEnemyProgress((prev) => Math.max(0, prev - 10));
-        }, 150); // Minor visual delay to match lightning strike travel
-      }
+        },
+        onComplete: () => {
+          setIsHit(false);
+          if (newHealth <= 0) {
+            // Enemy defeated! Player wins!
+            setIsMastered(true); // Victory trigger
+            levelMasteredAudio.current.currentTime = 0;
+            levelMasteredAudio.current.play().catch((err) => console.log('Audio playback error:', err));
+          } else {
+            loadNewPuzzle();
+          }
+          setAnimationState('idle');
+        }
+      });
 
       // Correct answer adds 10 to score
       setScore((prev) => prev + 10);
-
-      const attackDuration = hero === 'Titan' ? 1200 : hero === 'Aero' ? 1250 : 1000;
-
-      setTimeout(() => {
-        setIsHit(false);
-        if (newHealth <= 0) {
-          // Enemy defeated! Player wins!
-          setIsMastered(true); // Victory trigger
-          levelMasteredAudio.currentTime = 0;
-          levelMasteredAudio.play().catch((err) => console.log('Audio playback error:', err));
-        } else {
-          loadNewPuzzle();
-        }
-        setAnimationState('idle');
-      }, attackDuration);
 
     } else {
       // INCORRECT ANSWER: Advance
       if (incorrectAnswers.has(selectedAnswer)) return; // Prevent double-clicking same wrong answer
 
-      wrongAnswerAudio.currentTime = 0;
-      wrongAnswerAudio.play().catch((err) => console.log('Audio playback error:', err));
+      wrongAnswerAudio.current.currentTime = 0;
+      wrongAnswerAudio.current.play().catch((err) => console.log('Audio playback error:', err));
 
       setIncorrectAnswers((prev) => {
         const next = new Set(prev);
@@ -341,7 +269,7 @@ export default function CombatArena({ onBack, initialLevel = 1 }) {
                 {currentLevel === 6 && 'Sector 09: Mixed Mastery Boss Wave'}
               </h2>
               <span className="text-[10px] font-mono text-slate-500 uppercase tracking-widest block">
-                Hero: {getActiveHero()} // Level {currentLevel}
+                Hero: {activeHero.name} // Level {currentLevel}
               </span>
             </div>
           </div>
@@ -365,7 +293,7 @@ export default function CombatArena({ onBack, initialLevel = 1 }) {
           <div className="checkered-finish-line" />
 
           {/* Volt Strike Lightning Bolt (Addition) */}
-          {animationState === 'attacking' && getActiveHero() === 'Dash' && (
+          {animationState === 'attacking' && activeHero.id === 'dash' && (
             <svg
               className="volt-strike-container glow-yellow-lightning animate-lightning-bolt"
               style={{
@@ -426,7 +354,7 @@ export default function CombatArena({ onBack, initialLevel = 1 }) {
           )}
 
           {/* Quake Smash Kinetic Shockwave (Level 3) */}
-          {animationState === 'attacking' && getActiveHero() === 'Titan' && (
+          {animationState === 'attacking' && activeHero.id === 'titan' && (
             <div 
               className="quake-shockwave-rings-container"
               style={{
@@ -440,7 +368,7 @@ export default function CombatArena({ onBack, initialLevel = 1 }) {
           )}
 
           {/* Aero's Cyclone Blast (Level 4 & 5) */}
-          {animationState === 'attacking' && getActiveHero() === 'Aero' && (
+          {animationState === 'attacking' && activeHero.id === 'aero' && (
             <div 
               className="cyclone-blast-container"
               style={{
@@ -492,15 +420,7 @@ export default function CombatArena({ onBack, initialLevel = 1 }) {
             animationState === 'attacking' ? 'scale-110 z-30' : ''
           }`}>
             <div className="w-28 h-36">
-              {getActiveHero() === 'Dash' && (
-                <DashVector state={animationState === 'attacking' ? 'attack' : 'idle'} />
-              )}
-              {getActiveHero() === 'Titan' && (
-                <TitanVector state={animationState === 'attacking' ? 'attack' : 'idle'} />
-              )}
-              {getActiveHero() === 'Aero' && (
-                <AeroVector state={animationState === 'attacking' ? 'attack' : 'idle'} />
-              )}
+              {<activeHero.vector state={animationState === 'attacking' ? 'attack' : 'idle'} />}
             </div>
           </div>
 
