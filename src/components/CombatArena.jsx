@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
-import { generateSingleDigitAddition, generateLevel1Addition, generateLevel1Subtraction, generateLevel2Addition, generateLevel5Subtraction, generateLevel6Mixed, generateChoices } from '../utils/MathEngine';
-import Hero from '../utils/Hero';
+import { generateChoices } from '../utils/MathEngine';
+import GameLevel from '../utils/GameLevel';
 import GlitchBotVector from './vectors/GlitchBotVector';
 import DrNullVector from './vectors/DrNullVector';
 import { ArrowLeft } from 'lucide-react';
@@ -8,18 +8,6 @@ import LevelEndedOverlay from './LevelEndedOverlay';
 import wrongAnswerSound from '../assets/wrong-answer.mp3';
 import levelMasteredSound from '../assets/level-mastered.mp3';
 import levelFailedSound from '../assets/level-failed.mp3';
-
-const getPuzzleForLevel = (level) => {
-  const getPuzzle = [
-    generateSingleDigitAddition,
-    generateLevel1Addition,
-    generateLevel1Subtraction,
-    generateLevel2Addition,
-    generateLevel5Subtraction,
-    generateLevel6Mixed
-  ][level - 1] ?? generateSingleDigitAddition;
-  return getPuzzle();
-};
 
 export default function CombatArena({ onBack, initialLevel = 1 }) {
   const wrongAnswerAudio = useRef(null);
@@ -39,7 +27,7 @@ export default function CombatArena({ onBack, initialLevel = 1 }) {
 
   const [currentLevel, setCurrentLevel] = useState(initialLevel); // 1 | 2 | 3 | 4 | 5 | 6
   const [gameState, setGameState] = useState(() => {
-    const initialPuzzle = getPuzzleForLevel(initialLevel);
+    const initialPuzzle = GameLevel.getLevel(initialLevel).generatePuzzle();
     return {
       puzzle: initialPuzzle,
       choices: generateChoices(initialPuzzle)
@@ -86,12 +74,16 @@ export default function CombatArena({ onBack, initialLevel = 1 }) {
     }
   }, [isGameOver]);
 
+  const levelInfo = useMemo(() => {
+    return GameLevel.getLevel(currentLevel);
+  }, [currentLevel]);
+
   const activeHero = useMemo(() => {
-    return Hero.getHeroForLevel(currentLevel, puzzle?.sourceLevel);
-  }, [currentLevel, puzzle?.sourceLevel]);
+    return levelInfo.getHero(puzzle?.sourceLevel);
+  }, [levelInfo, puzzle?.sourceLevel]);
 
   const loadNewPuzzle = useCallback((level = currentLevel) => {
-    const newPuzzle = getPuzzleForLevel(level);
+    const newPuzzle = GameLevel.getLevel(level).generatePuzzle();
     setGameState({
       puzzle: newPuzzle,
       choices: generateChoices(newPuzzle)
@@ -148,7 +140,7 @@ export default function CombatArena({ onBack, initialLevel = 1 }) {
       // CORRECT ANSWER: Sprint attack
       setAnimationState('attacking');
 
-      const damageAmount = currentLevel === 6 ? 5 : 25;
+      const damageAmount = levelInfo.damagePerCorrectAnswer;
       const newHealth = Math.max(0, enemyHealth - damageAmount);
 
       // Trigger combat sequence using memoized activeHero
@@ -209,9 +201,9 @@ export default function CombatArena({ onBack, initialLevel = 1 }) {
         return next;
       });
 
-      // For Level 6, wrong answer heals Dr. Null by 5%
-      if (currentLevel === 6) {
-        setEnemyHealth((prev) => Math.min(100, prev + 5));
+      // For certain levels (like level 6 boss), wrong answer heals the enemy
+      if (levelInfo.healOnWrong > 0) {
+        setEnemyHealth((prev) => Math.min(100, prev + levelInfo.healOnWrong));
       }
 
       setTimeout(() => {
@@ -267,12 +259,7 @@ export default function CombatArena({ onBack, initialLevel = 1 }) {
             </button>
             <div className="text-left">
               <h2 className="font-display text-sm md:text-base font-bold text-cyan-400 uppercase tracking-wider">
-                {currentLevel === 1 && 'Single Digit Addition'}
-                {currentLevel === 2 && 'Addition'}
-                {currentLevel === 3 && 'Subtraction'}
-                {currentLevel === 4 && 'Carry Addition'}
-                {currentLevel === 5 && 'Borrow Subtraction'}
-                {currentLevel === 6 && 'Mixed Mastery Boss Wave'}
+                {levelInfo.name}
               </h2>
               <span className="text-[10px] font-mono text-slate-500 uppercase tracking-widest block">
                 Hero: {activeHero.name} // Level {currentLevel}
@@ -354,7 +341,7 @@ export default function CombatArena({ onBack, initialLevel = 1 }) {
 
               {/* Bot or Boss Puppet */}
               <div className="w-36 h-44">
-                {currentLevel === 6 ? (
+                {levelInfo.enemyType === 'boss' ? (
                   <DrNullVector
                     state="idle"
                     className={isHit ? 'animate-damage-flash' : ''}

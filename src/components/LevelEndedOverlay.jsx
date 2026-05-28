@@ -1,13 +1,5 @@
 import { Award, AlertCircle, RefreshCw } from 'lucide-react';
-
-const levelNames = [
-  'Single Digit Addition',
-  'Addition',
-  'Subtraction',
-  'Carry Addition',
-  'Borrow Subtraction',
-  'Mixed Mastery Boss Wave'
-];
+import GameLevel from '../utils/GameLevel';
 
 export default function LevelEndedOverlay({
   isMastered,
@@ -18,16 +10,14 @@ export default function LevelEndedOverlay({
   onBack
 }) {
 
-  const levelName = levelNames[currentLevel - 1] ?? '';
-  const nextLevelName = levelNames[currentLevel] ?? '';
+  const levelInfo = GameLevel.getLevel(currentLevel);
+  const nextLevelInfo = levelInfo.nextLevel ? GameLevel.getLevel(levelInfo.nextLevel) : null;
 
-  const successDescription = currentLevel === 6
-    ? `Incredible! You defeated Dr. Null, shutdown the glitch network, and saved the city! You are a Math Hero Squad legend!`
-    : `Fantastic job! You solved the ${levelName.toLowerCase()} equations, defeated the Glitch-Bot, and protected the mainframe!`;
+  const levelName = levelInfo.name;
+  const nextLevelName = nextLevelInfo ? nextLevelInfo.name : '';
 
-  const successDetail = currentLevel === 6
-    ? 'All math defense training levels complete! Math Hero Squad operations fully online.'
-    : `Level ${currentLevel} ${levelName} complete! Prepare for ${nextLevelName}.`;
+  const successDescription = levelInfo.getSuccessDescription();
+  const successDetail = levelInfo.getSuccessDetail(nextLevelName);
 
   // Configuration variables distinct to win (mastered) vs loss (failed) modes
   const masteredTheme = {
@@ -79,8 +69,8 @@ export default function LevelEndedOverlay({
     scoreColor: 'text-red-400',
     Icon: AlertCircle,
     title: 'DEFENSE BREACHED',
-    subtitle: `${currentLevel === 6 ? 'DR. NULL' : 'GLITCH-BOT'} BREACHED MAIN FRAME`,
-    description: `${currentLevel === 6 ? 'Dr. Null' : 'The Glitch-Bot'} advanced too close and corrupted our calculations!`,
+    subtitle: levelInfo.getLossSubtitle(),
+    description: levelInfo.getLossDescription(),
     detail: null,
     callToActions: [
       {
