@@ -4,8 +4,6 @@ import useGameState from '../hooks/useGameState';
 import useHeroState from '../hooks/useHeroState';
 import useVillainState from '../hooks/useVillainState';
 import useCheatKeys from '../hooks/useCheatKeys';
-import GlitchBotVector from './vectors/GlitchBotVector';
-import DrNullVector from './vectors/DrNullVector';
 import { ArrowLeft } from 'lucide-react';
 import LevelEndedOverlay from './LevelEndedOverlay';
 import wrongAnswerSound from '../assets/wrong-answer.mp3';
@@ -87,6 +85,10 @@ export default function CombatArena({ onBack, initialLevel = 1 }) {
   const activeHero = useMemo(() => {
     return levelInfo.getHero(puzzle?.sourceLevel);
   }, [levelInfo, puzzle?.sourceLevel]);
+
+  const activeVillain = useMemo(() => {
+    return levelInfo.villain;
+  }, [levelInfo]);
 
   // Cheat codes listener hook
   useCheatKeys({ currentLevel, resetVillain, resetGame, onBack });
@@ -298,30 +300,17 @@ export default function CombatArena({ onBack, initialLevel = 1 }) {
 
               {/* Bot or Boss Puppet */}
               <div className="w-36 h-44">
-                {levelInfo.enemyType === 'boss' ? (
-                  <DrNullVector
-                    state="idle"
-                    className={isHit ? 'animate-damage-flash' : ''}
-                  >
-                    {/* Chest displays the math problem vertically */}
-                    <div className="font-display font-black text-sm text-cyan-400 tracking-wider leading-none text-center">
-                      {puzzle.numA} <br />
-                      <span className="text-yellow-400 font-bold">{puzzle.operation === 'addition' ? '+' : '-'}</span>{puzzle.numB}
-                    </div>
-                  </DrNullVector>
-                ) : (
-                  <GlitchBotVector 
-                    state={animationState === 'idle' || animationState === 'enemyAdvancing' ? 'walk' : 'idle'}
-                    health={enemyHealth}
-                    className={isHit ? 'animate-damage-flash' : ''}
-                  >
-                    {/* Chest displays the math problem vertically */}
-                    <div className="font-display font-black text-sm text-cyan-400 tracking-wider leading-none text-center">
-                      {puzzle.numA} <br />
-                      <span className="text-yellow-400 font-bold">{puzzle.operation === 'addition' ? '+' : '-'}</span>{puzzle.numB}
-                    </div>
-                  </GlitchBotVector>
-                )}
+                <activeVillain.vectorComponent 
+                  state={activeVillain.getState(animationState)}
+                  health={enemyHealth}
+                  className={isHit ? 'animate-damage-flash' : ''}
+                >
+                  {/* Chest displays the math problem vertically */}
+                  <div className="font-display font-black text-sm text-cyan-400 tracking-wider leading-none text-center">
+                    {puzzle.numA} <br />
+                    <span className="text-yellow-400 font-bold">{puzzle.operation === 'addition' ? '+' : '-'}</span>{puzzle.numB}
+                  </div>
+                </activeVillain.vectorComponent>
               </div>
 
             </div>
