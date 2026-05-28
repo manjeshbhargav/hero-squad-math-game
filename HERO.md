@@ -10,26 +10,27 @@ The proposed `Hero` class acts as the single source of truth for all heroes. It 
 
 ### Class Properties
 
-| Property Name   | Type             | Description                                                                |
-| :-------------- | :--------------- | :------------------------------------------------------------------------- |
-| `id`            | `string`         | Unique identifier (e.g., `'dash'`, `'titan'`, `'aero'`).                   |
-| `name`          | `string`         | Display name (e.g., `'Dash'`, `'Titan'`, `'Aero'`).                        |
-| `role`          | `string`         | Hero's squad designation (e.g., `'The Speedster'`).                        |
-| `description`   | `string`         | Profile description of the hero's capabilities.                            |
-| `gear`          | `string`         | Suit and equipment info.                                                   |
-| `weapon`        | `string`         | Description of the special strike.                                         |
-| `icon`          | `ReactComponent` | The Lucide icon component used in the UI (e.g. `Zap`, `Wind`).             |
-| `vector`        | `ReactComponent` | The 2D puppet component (e.g., `DashVector`, `TitanVector`, `AeroVector`). |
-| `colorClass`    | `string`         | Tailwind CSS class for text coloring (e.g., `'text-yellow-400'`).          |
-| `bgBorderClass` | `string`         | Tailwind border, hover, and shadow classes for carousel cards.             |
-| `glowClass`     | `string`         | Custom CSS class for panel glowing effects.                                |
-| `badge`         | `string`         | Level badge representation (e.g., `'Levels 1-2 Hero'`).                    |
-| `audioPath`     | `string`         | Path to the hero's combat audio file.                                      |
-| `audio`         | `Audio`          | Preloaded, cached HTML5 `Audio` instance for zero-latency combat feedback. |
-| `shakeStart`    | `number`         | Delay in milliseconds before screen shake starts.                          |
-| `shakeEnd`      | `number`         | Delay in milliseconds before screen shake ends.                            |
-| `impact`        | `number`         | Delay in milliseconds when damage/pushback occurs on the robot.            |
-| `duration`      | `number`         | Total combat animation cycle duration in milliseconds.                     |
+| Property Name     | Type             | Description                                                                |
+| :---------------- | :--------------- | :------------------------------------------------------------------------- |
+| `id`              | `string`         | Unique identifier (e.g., `'dash'`, `'titan'`, `'aero'`).                   |
+| `name`            | `string`         | Display name (e.g., `'Dash'`, `'Titan'`, `'Aero'`).                        |
+| `role`            | `string`         | Hero's squad designation (e.g., `'The Speedster'`).                        |
+| `description`     | `string`         | Profile description of the hero's capabilities.                            |
+| `gear`            | `string`         | Suit and equipment info.                                                   |
+| `weapon`          | `string`         | Description of the special strike.                                         |
+| `icon`            | `ReactComponent` | The Lucide icon component used in the UI (e.g. `Zap`, `Wind`).             |
+| `vectorComponent` | `ReactComponent` | The 2D puppet component (e.g., `DashVector`, `TitanVector`, `AeroVector`). |
+| `colorClass`      | `string`         | Tailwind CSS class for text coloring (e.g., `'text-yellow-400'`).          |
+| `bgBorderClass`   | `string`         | Tailwind border, hover, and shadow classes for carousel cards.             |
+| `glowClass`       | `string`         | Custom CSS class for panel glowing effects.                                |
+| `badge`           | `string`         | Level badge representation (e.g., `'Levels 1-2 Hero'`).                    |
+| `audioPath`       | `string`         | Path to the hero's combat audio file.                                      |
+| `audio`           | `Audio`          | Preloaded, cached HTML5 `Audio` instance for zero-latency combat feedback. |
+| `shakeStart`      | `number`         | Delay in milliseconds before screen shake starts.                          |
+| `shakeEnd`        | `number`         | Delay in milliseconds before screen shake ends.                            |
+| `impact`          | `number`         | Delay in milliseconds when damage/pushback occurs on the robot.            |
+| `duration`        | `number`         | Total combat animation cycle duration in milliseconds.                     |
+| `weaponComponent` | `ReactComponent` | The 2D weapon component (e.g., `DashWeapon`, `TitanWeapon`, `AeroWeapon`). |
 
 ---
 
@@ -43,6 +44,9 @@ import { Zap, ShieldAlert, Wind } from "lucide-react";
 import DashVector from "../components/vectors/DashVector";
 import TitanVector from "../components/vectors/TitanVector";
 import AeroVector from "../components/vectors/AeroVector";
+import DashWeapon from "../components/weapons/DashWeapon";
+import TitanWeapon from "../components/weapons/TitanWeapon";
+import AeroWeapon from "../components/weapons/AeroWeapon";
 
 import voltStrikeAudio from "../assets/dash-volt-strike.mp3";
 import titanShockWaveAudio from "../assets/titan-shock-wave.mp3";
@@ -57,12 +61,13 @@ export default class Hero {
     this.gear = config.gear;
     this.weapon = config.weapon;
     this.icon = config.icon;
-    this.vector = config.vector;
+    this.vectorComponent = config.vectorComponent;
     this.colorClass = config.colorClass;
     this.bgBorderClass = config.bgBorderClass;
     this.glowClass = config.glowClass;
     this.badge = config.badge;
     this.audioPath = config.audioPath;
+    this.weaponComponent = config.weaponComponent;
 
     // Timing constraints
     this.shakeStart = config.shakeStart;
@@ -125,7 +130,7 @@ export default class Hero {
     gear: "Blue and yellow lightning suit.",
     weapon: "Volt Strike: Zaps yellow lightning straight across the screen.",
     icon: Zap,
-    vector: DashVector,
+    vectorComponent: DashVector,
     colorClass: "text-yellow-400",
     bgBorderClass:
       "border-yellow-500/40 hover:border-yellow-400 hover:shadow-[0_0_15px_rgba(234,179,8,0.4)]",
@@ -136,6 +141,7 @@ export default class Hero {
     shakeEnd: 400,
     impact: 150,
     duration: 1000,
+    weaponComponent: DashWeapon,
   });
 
   static TITAN = new Hero({
@@ -147,7 +153,7 @@ export default class Hero {
     gear: "Red and silver armored suit.",
     weapon: "Quake Smash: Shakes the floor to push back robots.",
     icon: ShieldAlert,
-    vector: TitanVector,
+    vectorComponent: TitanVector,
     colorClass: "text-red-500",
     bgBorderClass:
       "border-red-600/40 hover:border-red-500 hover:shadow-[0_0_15px_rgba(239,68,68,0.4)]",
@@ -158,6 +164,7 @@ export default class Hero {
     shakeEnd: 900,
     impact: 800,
     duration: 1200,
+    weaponComponent: TitanWeapon,
   });
 
   static AERO = new Hero({
@@ -169,7 +176,7 @@ export default class Hero {
     gear: "Green and white wing-suit.",
     weapon: "Cyclone Blast: Shoots a spinning green tornado at targets.",
     icon: Wind,
-    vector: AeroVector,
+    vectorComponent: AeroVector,
     colorClass: "text-emerald-400",
     bgBorderClass:
       "border-emerald-500/40 hover:border-emerald-400 hover:shadow-[0_0_15px_rgba(52,211,153,0.4)]",
@@ -180,6 +187,7 @@ export default class Hero {
     shakeEnd: 1100,
     impact: 850,
     duration: 1250,
+    weaponComponent: AeroWeapon,
   });
 
   static registry = [Hero.DASH, Hero.TITAN, Hero.AERO];

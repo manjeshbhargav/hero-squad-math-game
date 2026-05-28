@@ -2,6 +2,9 @@ import { Zap, ShieldAlert, Wind } from 'lucide-react';
 import DashVector from '../components/vectors/DashVector';
 import TitanVector from '../components/vectors/TitanVector';
 import AeroVector from '../components/vectors/AeroVector';
+import DashWeapon from '../components/weapons/DashWeapon';
+import TitanWeapon from '../components/weapons/TitanWeapon';
+import AeroWeapon from '../components/weapons/AeroWeapon';
 
 import voltStrikeSound from '../assets/dash-volt-strike.mp3';
 import titanShockWaveSound from '../assets/titan-shock-wave.mp3';
@@ -16,13 +19,14 @@ export default class Hero {
     this.suit = config.suit;
     this.weapon = config.weapon;
     this.icon = config.icon;
-    this.vector = config.vector;
+    this.vectorComponent = config.vectorComponent;
     this.colorClass = config.colorClass;
     this.bgBorderClass = config.bgBorderClass;
     this.glowClass = config.glowClass;
     this.badge = config.badge;
     this.type = 'hero';
     this.audioPath = config.audioPath;
+    this.weaponComponent = config.weaponComponent;
 
     // Timing constraints
     this.shakeStart = config.shakeStart;
@@ -82,7 +86,7 @@ export default class Hero {
     suit: 'Blue and yellow lightning suit.',
     weapon: 'Volt Strike: Zaps yellow lightning straight across the screen.',
     icon: Zap,
-    vector: DashVector,
+    vectorComponent: DashVector,
     colorClass: 'text-yellow-400',
     bgBorderClass: 'border-yellow-500/40 hover:border-yellow-400 hover:shadow-[0_0_15px_rgba(234,179,8,0.4)]',
     glowClass: 'glow-yellow',
@@ -91,7 +95,8 @@ export default class Hero {
     shakeStart: 0,
     shakeEnd: 400,
     impact: 150,
-    duration: 1000
+    duration: 1000,
+    weaponComponent: DashWeapon
   });
 
   static TITAN = new Hero({
@@ -102,7 +107,7 @@ export default class Hero {
     suit: 'Red and silver armored suit.',
     weapon: 'Quake Smash: Shakes the floor to push back robots.',
     icon: ShieldAlert,
-    vector: TitanVector,
+    vectorComponent: TitanVector,
     colorClass: 'text-red-500',
     bgBorderClass: 'border-red-600/40 hover:border-red-500 hover:shadow-[0_0_15px_rgba(239,68,68,0.4)]',
     glowClass: 'glow-red',
@@ -111,7 +116,8 @@ export default class Hero {
     shakeStart: 500,
     shakeEnd: 900,
     impact: 800,
-    duration: 1200
+    duration: 1200,
+    weaponComponent: TitanWeapon
   });
 
   static AERO = new Hero({
@@ -122,7 +128,7 @@ export default class Hero {
     suit: 'Green and white wing-suit.',
     weapon: 'Cyclone Blast: Shoots a spinning green tornado at targets.',
     icon: Wind,
-    vector: AeroVector,
+    vectorComponent: AeroVector,
     colorClass: 'text-emerald-400',
     bgBorderClass: 'border-emerald-500/40 hover:border-emerald-400 hover:shadow-[0_0_15px_rgba(52,211,153,0.4)]',
     glowClass: 'glow-green',
@@ -131,7 +137,8 @@ export default class Hero {
     shakeStart: 800,
     shakeEnd: 1100,
     impact: 850,
-    duration: 1250
+    duration: 1250,
+    weaponComponent: AeroWeapon
   });
 
   static registry = [Hero.DASH, Hero.TITAN, Hero.AERO];

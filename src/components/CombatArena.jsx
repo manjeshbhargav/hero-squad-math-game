@@ -292,127 +292,9 @@ export default function CombatArena({ onBack, initialLevel = 1 }) {
           {/* Checkered Finish Line */}
           <div className="checkered-finish-line" />
 
-          {/* Volt Strike Lightning Bolt (Addition) */}
-          {animationState === 'attacking' && activeHero.id === 'dash' && (
-            <svg
-              className="volt-strike-container glow-yellow-lightning animate-lightning-bolt"
-              style={{
-                '--bot-left': `${80 - enemyProgress * 0.58}%`
-              }}
-              viewBox="0 0 100 20"
-              preserveAspectRatio="none"
-            >
-              {/* Outer glowing path */}
-              <path
-                d="M 0 12 L 12 4 L 20 14 L 35 3 L 42 16 L 55 6 L 68 15 L 76 8 L 88 13 L 100 8"
-                fill="none"
-                stroke="#facc15"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="opacity-70"
-              />
-              {/* Inner bright core */}
-              <path
-                d="M 0 12 L 12 4 L 20 14 L 35 3 L 42 16 L 55 6 L 68 15 L 76 8 L 88 13 L 100 8"
-                fill="none"
-                stroke="#ffffff"
-                strokeWidth="0.6"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              
-              {/* Secondary electric arcs/branches */}
-              <path
-                d="M 20 14 L 28 19 L 33 17"
-                fill="none"
-                stroke="#eab308"
-                strokeWidth="0.4"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="opacity-50"
-              />
-              <path
-                d="M 55 6 L 62 2 L 68 5"
-                fill="none"
-                stroke="#eab308"
-                strokeWidth="0.4"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="opacity-50"
-              />
-              <path
-                d="M 76 8 L 82 13 L 87 11"
-                fill="none"
-                stroke="#eab308"
-                strokeWidth="0.4"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="opacity-50"
-              />
-            </svg>
-          )}
-
-          {/* Quake Smash Kinetic Shockwave (Level 3) */}
-          {animationState === 'attacking' && activeHero.id === 'titan' && (
-            <div 
-              className="quake-shockwave-rings-container"
-              style={{
-                '--bot-left': `${80 - enemyProgress * 0.58}%`
-              }}
-            >
-              <div className="quake-ring ring-1" />
-              <div className="quake-ring ring-2" />
-              <div className="quake-ring ring-3" />
-            </div>
-          )}
-
-          {/* Aero's Cyclone Blast (Level 4 & 5) */}
-          {animationState === 'attacking' && activeHero.id === 'aero' && (
-            <div 
-              className="cyclone-blast-container"
-              style={{
-                '--bot-left': `${80 - enemyProgress * 0.58}%`
-              }}
-            >
-              <svg
-                className="cyclone-vortex animate-cyclone-travel"
-                viewBox="0 0 60 80"
-                preserveAspectRatio="none"
-              >
-                {/* Wavy inverted triangle wind lines */}
-                <path
-                  d="M 5 5 C 15 25 15 15 25 45 C 28 55 25 65 30 80 C 35 65 32 55 35 45 C 45 15 45 25 55 5 Z"
-                  fill="rgba(52, 211, 153, 0.15)"
-                  stroke="#10b981"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                {/* Inner winds */}
-                <path
-                  d="M 12 15 C 25 35 15 45 28 65 C 29 70 30 75 30 80"
-                  fill="none"
-                  stroke="#a7f3d0"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  className="opacity-70"
-                />
-                <path
-                  d="M 48 15 C 35 35 45 45 32 65 C 31 70 30 75 30 80"
-                  fill="none"
-                  stroke="#a7f3d0"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  className="opacity-70"
-                />
-                {/* Top horizontal wind rings */}
-                <ellipse cx="30" cy="8" rx="25" ry="5" fill="none" stroke="#10b981" strokeWidth="1.5" />
-                <ellipse cx="30" cy="25" rx="18" ry="4" fill="none" stroke="#10b981" strokeWidth="1.2" />
-                <ellipse cx="30" cy="45" rx="12" ry="3" fill="none" stroke="#10b981" strokeWidth="1" />
-                <ellipse cx="30" cy="65" rx="6" ry="2" fill="none" stroke="#10b981" strokeWidth="0.8" />
-              </svg>
-            </div>
+          {/* Dynamic Weapon Attack component */}
+          {animationState === 'attacking' && (
+            <activeHero.weaponComponent enemyProgress={enemyProgress} />
           )}
 
           {/* Left Side Hero - stays in place at left-[5%] */}
@@ -420,7 +302,7 @@ export default function CombatArena({ onBack, initialLevel = 1 }) {
             animationState === 'attacking' ? 'scale-110 z-30' : ''
           }`}>
             <div className="w-28 h-36">
-              {<activeHero.vector state={animationState === 'attacking' ? 'attack' : 'idle'} />}
+              {<activeHero.vectorComponent state={animationState === 'attacking' ? 'attack' : 'idle'} />}
             </div>
           </div>
 

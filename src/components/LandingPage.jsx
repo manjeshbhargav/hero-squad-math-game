@@ -259,7 +259,7 @@ export default function LandingPage({ onStart }) {
                       </span>
                       <div className="w-32 h-44">
                         {char.type === 'hero' ? (
-                          React.createElement(char.vector, { state: 'idle' })
+                          React.createElement(char.vectorComponent, { state: 'idle' })
                         ) : (
                           <>
                             {char.id === 'drnull' && <DrNullVector state="idle" />}
