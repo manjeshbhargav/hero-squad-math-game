@@ -1,6 +1,9 @@
-import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
-import { generateChoices } from '../utils/MathEngine';
+import { useEffect, useRef, useCallback, useMemo } from 'react';
 import GameLevel from '../utils/GameLevel';
+import useGameState from '../hooks/useGameState';
+import useHeroState from '../hooks/useHeroState';
+import useVillainState from '../hooks/useVillainState';
+import useCheatKeys from '../hooks/useCheatKeys';
 import GlitchBotVector from './vectors/GlitchBotVector';
 import DrNullVector from './vectors/DrNullVector';
 import { ArrowLeft } from 'lucide-react';
@@ -25,46 +28,49 @@ export default function CombatArena({ onBack, initialLevel = 1 }) {
     levelFailedAudio.current.preload = 'auto';
   }, []);
 
-  const [currentLevel, setCurrentLevel] = useState(initialLevel); // 1 | 2 | 3 | 4 | 5 | 6
-  const [gameState, setGameState] = useState(() => {
-    const initialPuzzle = GameLevel.getLevel(initialLevel).generatePuzzle();
-    return {
-      puzzle: initialPuzzle,
-      choices: generateChoices(initialPuzzle)
-    };
+  const {
+    currentLevel,
+    puzzle,
+    choices,
+    score,
+    setScore,
+    firstAttempt,
+    setFirstAttempt,
+    incorrectAnswers,
+    setIncorrectAnswers,
+    isMastered,
+    setIsMastered,
+    isGameOver,
+    setIsGameOver,
+    loadNewPuzzle,
+    resetGame
+  } = useGameState(initialLevel);
+
+  const {
+    animationState,
+    setAnimationState,
+    screenShake,
+    setScreenShake,
+    isHit,
+    setIsHit
+  } = useHeroState();
+
+  const handleGameOver = useCallback(() => {
+    setIsGameOver(true);
+  }, [setIsGameOver]);
+
+  const {
+    enemyHealth,
+    setEnemyHealth,
+    enemyProgress,
+    setEnemyProgress,
+    resetVillain
+  } = useVillainState({
+    isGameOver,
+    isMastered,
+    animationState,
+    onGameOver: handleGameOver
   });
-  const { puzzle, choices } = gameState;
-
-  const [animationState, setAnimationState] = useState('idle'); // 'idle' | 'attacking' | 'enemyAdvancing'
-  
-  const [enemyHealth, setEnemyHealth] = useState(100);
-  const [enemyProgress, setEnemyProgress] = useState(0); // 0 is far right, 100 is game over/cross finish line
-  const [score, setScore] = useState(0);
-  const [firstAttempt, setFirstAttempt] = useState(true);
-  const [incorrectAnswers, setIncorrectAnswers] = useState(new Set());
-  
-  const [isMastered, setIsMastered] = useState(false);
-  const [isGameOver, setIsGameOver] = useState(false);
-  const [screenShake, setScreenShake] = useState(false);
-  const [isHit, setIsHit] = useState(false);
-
-  // Continuous bot movement loop
-  useEffect(() => {
-    if (isGameOver || isMastered || animationState !== 'idle') return;
-
-    const interval = setInterval(() => {
-      setEnemyProgress((prev) => {
-        const next = prev + 1; // creep by 1%
-        if (next >= 100) {
-          setIsGameOver(true);
-          return 100;
-        }
-        return next;
-      });
-    }, 450); // Creeps 1% every 450ms (~45 seconds to travel full length)
-
-    return () => clearInterval(interval);
-  }, [isGameOver, isMastered, animationState]);
 
   // Game over sound effect trigger
   useEffect(() => {
@@ -82,153 +88,104 @@ export default function CombatArena({ onBack, initialLevel = 1 }) {
     return levelInfo.getHero(puzzle?.sourceLevel);
   }, [levelInfo, puzzle?.sourceLevel]);
 
-  const loadNewPuzzle = useCallback((level = currentLevel) => {
-    const newPuzzle = GameLevel.getLevel(level).generatePuzzle();
-    setGameState({
-      puzzle: newPuzzle,
-      choices: generateChoices(newPuzzle)
-    });
-    setFirstAttempt(true);
-    setIncorrectAnswers(new Set());
-  }, [currentLevel]);
+  // Cheat codes listener hook
+  useCheatKeys({ currentLevel, resetVillain, resetGame, onBack });
 
-  // Cheat codes listener
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      const isRight = e.shiftKey && e.key.toLowerCase() === 'n';
-      const isLeft = e.shiftKey && e.key.toLowerCase() === 'p';
+  const handleRightAnswer = () => {
+    // CORRECT ANSWER: Sprint attack
+    setAnimationState('attacking');
 
-      if (isRight) {
-        e.preventDefault();
-        if (currentLevel < 6) {
-          const nextLvl = currentLevel + 1;
-          setCurrentLevel(nextLvl);
-          setEnemyHealth(100);
-          setEnemyProgress(0);
-          setIsMastered(false);
-          setIsGameOver(false);
-          loadNewPuzzle(nextLvl);
+    const damageAmount = levelInfo.damagePerCorrectAnswer;
+    const newHealth = Math.max(0, enemyHealth - damageAmount);
+
+    // Trigger combat sequence using memoized activeHero
+    activeHero.triggerAttack({
+      onShakeStart: () => setScreenShake(true),
+      onShakeEnd: () => setScreenShake(false),
+      onImpact: () => {
+        setIsHit(true);
+        setEnemyHealth(newHealth);
+        setEnemyProgress((prev) => Math.max(0, prev - 10));
+      },
+      onComplete: () => {
+        setIsHit(false);
+        if (newHealth <= 0) {
+          // Enemy defeated! Player wins!
+          setIsMastered(true); // Victory trigger
+          levelMasteredAudio.current.currentTime = 0;
+          levelMasteredAudio.current.play().catch((err) => console.log('Audio playback error:', err));
         } else {
-          onBack();
+          loadNewPuzzle();
         }
-      } else if (isLeft) {
-        e.preventDefault();
-        if (currentLevel > 1) {
-          const prevLvl = currentLevel - 1;
-          setCurrentLevel(prevLvl);
-          setEnemyHealth(100);
-          setEnemyProgress(0);
-          setIsMastered(false);
-          setIsGameOver(false);
-          loadNewPuzzle(prevLvl);
-        } else {
-          onBack();
-        }
+        setAnimationState('idle');
       }
-    };
+    });
 
-    window.addEventListener('keydown', handleKeyDown);
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [currentLevel, loadNewPuzzle, onBack]);
+    // Correct answer adds 10 to score
+    setScore((prev) => prev + 10);
+  };
+
+  const handleWrongAnswer = (selectedAnswer) => {
+    // INCORRECT ANSWER: Advance
+    if (incorrectAnswers.has(selectedAnswer)) return; // Prevent double-clicking same wrong answer
+
+    wrongAnswerAudio.current.currentTime = 0;
+    wrongAnswerAudio.current.play().catch((err) => console.log('Audio playback error:', err));
+
+    setIncorrectAnswers((prev) => {
+      const next = new Set(prev);
+      next.add(selectedAnswer);
+      return next;
+    });
+
+    // Record first attempt
+    if (firstAttempt) {
+      setFirstAttempt(false);
+    }
+
+    setAnimationState('enemyAdvancing');
+    
+    // Wrong answer subtracts 5 from score, unless it is zero
+    setScore((prev) => Math.max(0, prev - 5));
+
+    // Advance enemy as a penalty
+    setEnemyProgress((prev) => {
+      const next = Math.min(100, prev + 15);
+      if (next >= 100) {
+        setIsGameOver(true);
+      }
+      return next;
+    });
+
+    // For certain levels (like level 6 boss), wrong answer heals the enemy
+    if (levelInfo.healOnWrong > 0) {
+      setEnemyHealth((prev) => Math.min(100, prev + levelInfo.healOnWrong));
+    }
+
+    setTimeout(() => {
+      loadNewPuzzle(); // Change the question even if the answer is wrong
+      setAnimationState('idle');
+    }, 800);
+  };
 
   const handleChoiceClick = (selectedAnswer) => {
     if (animationState !== 'idle' || isMastered || isGameOver) return;
 
     if (selectedAnswer === puzzle.correctAnswer) {
-      // CORRECT ANSWER: Sprint attack
-      setAnimationState('attacking');
-
-      const damageAmount = levelInfo.damagePerCorrectAnswer;
-      const newHealth = Math.max(0, enemyHealth - damageAmount);
-
-      // Trigger combat sequence using memoized activeHero
-      activeHero.triggerAttack({
-        onShakeStart: () => setScreenShake(true),
-        onShakeEnd: () => setScreenShake(false),
-        onImpact: () => {
-          setIsHit(true);
-          setEnemyHealth(newHealth);
-          setEnemyProgress((prev) => Math.max(0, prev - 10));
-        },
-        onComplete: () => {
-          setIsHit(false);
-          if (newHealth <= 0) {
-            // Enemy defeated! Player wins!
-            setIsMastered(true); // Victory trigger
-            levelMasteredAudio.current.currentTime = 0;
-            levelMasteredAudio.current.play().catch((err) => console.log('Audio playback error:', err));
-          } else {
-            loadNewPuzzle();
-          }
-          setAnimationState('idle');
-        }
-      });
-
-      // Correct answer adds 10 to score
-      setScore((prev) => prev + 10);
-
+      handleRightAnswer();
     } else {
-      // INCORRECT ANSWER: Advance
-      if (incorrectAnswers.has(selectedAnswer)) return; // Prevent double-clicking same wrong answer
-
-      wrongAnswerAudio.current.currentTime = 0;
-      wrongAnswerAudio.current.play().catch((err) => console.log('Audio playback error:', err));
-
-      setIncorrectAnswers((prev) => {
-        const next = new Set(prev);
-        next.add(selectedAnswer);
-        return next;
-      });
-
-      // Record first attempt
-      if (firstAttempt) {
-        setFirstAttempt(false);
-      }
-
-      setAnimationState('enemyAdvancing');
-      
-      // Wrong answer subtracts 5 from score, unless it is zero
-      setScore((prev) => Math.max(0, prev - 5));
-
-      // Advance enemy as a penalty
-      setEnemyProgress((prev) => {
-        const next = Math.min(100, prev + 15);
-        if (next >= 100) {
-          setIsGameOver(true);
-        }
-        return next;
-      });
-
-      // For certain levels (like level 6 boss), wrong answer heals the enemy
-      if (levelInfo.healOnWrong > 0) {
-        setEnemyHealth((prev) => Math.min(100, prev + levelInfo.healOnWrong));
-      }
-
-      setTimeout(() => {
-        loadNewPuzzle(); // Change the question even if the answer is wrong
-        setAnimationState('idle');
-      }, 800);
+      handleWrongAnswer(selectedAnswer);
     }
   };
 
   const handleReset = () => {
-    setEnemyHealth(100);
-    setEnemyProgress(0);
-    setScore(0);
-    setIsMastered(false);
-    setIsGameOver(false);
-    loadNewPuzzle();
+    resetVillain();
+    resetGame(currentLevel);
   };
 
   const handleNextLevel = (nextLevelVal) => {
-    setCurrentLevel(nextLevelVal);
-    setEnemyHealth(100);
-    setEnemyProgress(0);
-    setIsMastered(false);
-    setIsGameOver(false);
-    loadNewPuzzle(nextLevelVal);
+    resetVillain();
+    resetGame(nextLevelVal);
   };
 
   const getHealthColor = (health) => {
