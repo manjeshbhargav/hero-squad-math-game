@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Skull, Play, X, Info, ChevronLeft, ChevronRight, Bot, ShieldAlert } from 'lucide-react';
+import { Play, X, Info, ChevronLeft, ChevronRight, ShieldAlert } from 'lucide-react';
 import Hero from '../utils/Hero';
-import DrNullVector from './vectors/DrNullVector';
-import GlitchBotVector from './vectors/GlitchBotVector';
+import Villain from '../utils/Villain';
 import introMusic from '../assets/intro.mp3';
 
 const audio = new Audio(introMusic);
@@ -87,34 +86,8 @@ export default function LandingPage({ onStart }) {
   };
 
   const characters = [
-    {
-      id: 'drnull',
-      name: 'Dr. Null',
-      role: 'The Villain',
-      description: 'A mad scientist sending blocky Glitch-Bots to defeat the heroes with math problems!',
-      suit: 'Floating scientist lab robes.',
-      weapon: 'Glitch-Bots: Evil blocky robots with math problems on their bodies.',
-      icon: Skull,
-      colorClass: 'text-purple-400',
-      bgBorderClass: 'border-purple-500/40 hover:border-purple-400 hover:shadow-[0_0_15px_rgba(168,85,247,0.4)]',
-      glowClass: 'glow-purple',
-      badge: 'Villain Boss',
-      type: 'villain'
-    },
-    {
-      id: 'glitchbot',
-      name: 'Glitch-Bot',
-      role: 'The Minion',
-      description: 'Evil blocky robots sent by Dr. Null to defeat the heroes with tricky math problems!',
-      suit: 'Iron chassis with vintage CRT screen body.',
-      weapon: 'Wrong answer: Advances rapidly to defeat the heroes.',
-      icon: Bot,
-      colorClass: 'text-rose-400',
-      bgBorderClass: 'border-rose-500/40 hover:border-rose-400 hover:shadow-[0_0_15px_rgba(244,63,94,0.4)]',
-      glowClass: 'glow-rose',
-      badge: 'Robot Minion',
-      type: 'minion'
-    },
+    Villain.DR_NULL,
+    Villain.GLITCH_BOT,
     ...Hero.getAllHeroes()
   ];
 
@@ -261,17 +234,14 @@ export default function LandingPage({ onStart }) {
                         {char.type === 'hero' ? (
                           React.createElement(char.vectorComponent, { state: 'idle' })
                         ) : (
-                          <>
-                            {char.id === 'drnull' && <DrNullVector state="idle" />}
-                            {char.id === 'glitchbot' && (
-                              <GlitchBotVector state="idle">
-                                <div className="font-display font-black text-sm text-cyan-400 tracking-wider leading-none text-center">
-                                  5 <br />
-                                  <span className="text-yellow-400 font-bold">+</span>3
-                                </div>
-                              </GlitchBotVector>
-                            )}
-                          </>
+                          React.createElement(char.vectorComponent, { state: 'idle' }, 
+                            char.id === 'glitch_bot' ? (
+                              <div className="font-display font-black text-sm text-cyan-400 tracking-wider leading-none text-center">
+                                5 <br />
+                                <span className="text-yellow-400 font-bold">+</span>3
+                              </div>
+                            ) : null
+                          )
                         )}
                       </div>
                     </div>
