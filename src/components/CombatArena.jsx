@@ -3,12 +3,25 @@ import { generateSingleDigitAddition, generateLevel1Addition, generateLevel1Subt
 import Hero from '../utils/Hero';
 import GlitchBotVector from './vectors/GlitchBotVector';
 import DrNullVector from './vectors/DrNullVector';
-import { Award, AlertCircle, ArrowLeft, RefreshCw } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
+import LevelEndedOverlay from './LevelEndedOverlay';
 import wrongAnswerSound from '../assets/wrong-answer.mp3';
 import levelMasteredSound from '../assets/level-mastered.mp3';
 import levelFailedSound from '../assets/level-failed.mp3';
-export default function CombatArena({ onBack, initialLevel = 1 }) {
 
+const getPuzzleForLevel = (level) => {
+  const getPuzzle = [
+    generateSingleDigitAddition,
+    generateLevel1Addition,
+    generateLevel1Subtraction,
+    generateLevel2Addition,
+    generateLevel5Subtraction,
+    generateLevel6Mixed
+  ][level - 1] ?? generateSingleDigitAddition;
+  return getPuzzle();
+};
+
+export default function CombatArena({ onBack, initialLevel = 1 }) {
   const wrongAnswerAudio = useRef(null);
   const levelMasteredAudio = useRef(null);
   const levelFailedAudio = useRef(null);
@@ -26,15 +39,7 @@ export default function CombatArena({ onBack, initialLevel = 1 }) {
 
   const [currentLevel, setCurrentLevel] = useState(initialLevel); // 1 | 2 | 3 | 4 | 5 | 6
   const [gameState, setGameState] = useState(() => {
-    let initialPuzzle;
-    if (initialLevel === 1) initialPuzzle = generateSingleDigitAddition();
-    else if (initialLevel === 2) initialPuzzle = generateLevel1Addition();
-    else if (initialLevel === 3) initialPuzzle = generateLevel1Subtraction();
-    else if (initialLevel === 4) initialPuzzle = generateLevel2Addition();
-    else if (initialLevel === 5) initialPuzzle = generateLevel5Subtraction();
-    else if (initialLevel === 6) initialPuzzle = generateLevel6Mixed();
-    else initialPuzzle = generateSingleDigitAddition();
-
+    const initialPuzzle = getPuzzleForLevel(initialLevel);
     return {
       puzzle: initialPuzzle,
       choices: generateChoices(initialPuzzle)
@@ -86,15 +91,7 @@ export default function CombatArena({ onBack, initialLevel = 1 }) {
   }, [currentLevel, puzzle?.sourceLevel]);
 
   const loadNewPuzzle = useCallback((level = currentLevel) => {
-    const getNewPuzzle = [
-      generateSingleDigitAddition,
-      generateLevel1Addition,
-      generateLevel1Subtraction,
-      generateLevel2Addition,
-      generateLevel5Subtraction,
-      generateLevel6Mixed
-    ][level - 1] ?? generateSingleDigitAddition;
-    const newPuzzle = getNewPuzzle();
+    const newPuzzle = getPuzzleForLevel(level);
     setGameState({
       puzzle: newPuzzle,
       choices: generateChoices(newPuzzle)
@@ -233,6 +230,15 @@ export default function CombatArena({ onBack, initialLevel = 1 }) {
     loadNewPuzzle();
   };
 
+  const handleNextLevel = (nextLevelVal) => {
+    setCurrentLevel(nextLevelVal);
+    setEnemyHealth(100);
+    setEnemyProgress(0);
+    setIsMastered(false);
+    setIsGameOver(false);
+    loadNewPuzzle(nextLevelVal);
+  };
+
   const getHealthColor = (health) => {
     const hue = (health / 100) * 120;
     return `hsl(${hue}, 85%, 45%)`;
@@ -261,12 +267,12 @@ export default function CombatArena({ onBack, initialLevel = 1 }) {
             </button>
             <div className="text-left">
               <h2 className="font-display text-sm md:text-base font-bold text-cyan-400 uppercase tracking-wider">
-                {currentLevel === 1 && 'Sector 09: Single Digit Addition'}
-                {currentLevel === 2 && 'Sector 09: Addition'}
-                {currentLevel === 3 && 'Sector 09: Subtraction'}
-                {currentLevel === 4 && 'Sector 09: Carry Addition'}
-                {currentLevel === 5 && 'Sector 09: Borrow Subtraction'}
-                {currentLevel === 6 && 'Sector 09: Mixed Mastery Boss Wave'}
+                {currentLevel === 1 && 'Single Digit Addition'}
+                {currentLevel === 2 && 'Addition'}
+                {currentLevel === 3 && 'Subtraction'}
+                {currentLevel === 4 && 'Carry Addition'}
+                {currentLevel === 5 && 'Borrow Subtraction'}
+                {currentLevel === 6 && 'Mixed Mastery Boss Wave'}
               </h2>
               <span className="text-[10px] font-mono text-slate-500 uppercase tracking-widest block">
                 Hero: {activeHero.name} // Level {currentLevel}
@@ -407,245 +413,16 @@ export default function CombatArena({ onBack, initialLevel = 1 }) {
 
       </div>
 
-      {/* Mastery Overlay */}
-      {isMastered && (
-        <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 z-50 animate-fade-in">
-          <div className="relative w-full max-w-md bg-slate-900 border border-green-500/40 p-6 strict-rounded shadow-[0_0_50px_rgba(34,197,94,0.15)] flex flex-col space-y-4 text-center">
-            
-            {/* Corner decorations */}
-            <div className="absolute -top-px -left-px w-4 h-4 border-t-2 border-l-2 border-green-400 rounded-tl-[2px]"></div>
-            <div className="absolute -bottom-px -right-px w-4 h-4 border-b-2 border-r-2 border-green-400 rounded-br-[2px]"></div>
-
-            <div className="flex flex-col items-center space-y-2">
-              <div className="p-3 bg-green-500/10 border border-green-500/30 text-green-400 strict-rounded animate-bounce">
-                <Award size={48} />
-              </div>
-              <h3 className="font-display font-black text-green-400 text-xl tracking-wider uppercase pt-2">
-                {currentLevel === 1 && 'LEVEL 1 SINGLE DIGIT ADDITION MASTERED!'}
-                {currentLevel === 2 && 'LEVEL 2 ADDITION MASTERED!'}
-                {currentLevel === 3 && 'LEVEL 3 SUBTRACTION MASTERED!'}
-                {currentLevel === 4 && 'LEVEL 4 CARRY ADDITION MASTERED!'}
-                {currentLevel === 5 && 'LEVEL 5 FORCED BORROW SUBTRACTION MASTERED!'}
-                {currentLevel === 6 && 'LEVEL 6 MIXED MASTERY BOSS WAVE MASTERED!'}
-              </h3>
-              <span className="font-mono text-xs text-slate-500">MISSION COMPLETED SUCCESSFULLY</span>
-            </div>
-
-            <div className="space-y-3 py-2 text-slate-300 text-sm leading-relaxed font-sans font-medium">
-              <p>
-                {currentLevel === 1 && 'Fantastic job! You solved the single digit addition equations, defeated the Glitch-Bot, and protected the mainframe!'}
-                {currentLevel === 2 && 'Fantastic job! You solved the addition equations, defeated the Glitch-Bot, and protected the mainframe!'}
-                {currentLevel === 3 && 'Fantastic job! You solved the subtraction equations, defeated the Glitch-Bot, and protected the mainframe!'}
-                {currentLevel === 4 && 'Fantastic job! You solved the carry addition equations, defeated the Glitch-Bot, and protected the mainframe!'}
-                {currentLevel === 5 && 'Fantastic job! You solved the borrow subtraction equations, defeated the Glitch-Bot, and protected the mainframe!'}
-                {currentLevel === 6 && 'Incredible! You defeated Dr. Null, shutdown the glitch network, and saved the city! You are a Math Hero Squad legend!'}
-              </p>
-              <div className="border border-slate-800 p-3 bg-slate-950/40 strict-rounded flex flex-col gap-3">
-                <div className="flex justify-center">
-                  <div>
-                    <span className="block text-slate-500 font-bold uppercase tracking-wider text-[10px] mb-1">SCORE EARNED</span>
-                    <span className="text-2xl text-green-400 font-black font-display">{score}</span>
-                  </div>
-                </div>
-                <div className="text-xs text-slate-400 border-t border-slate-800/40 pt-2 text-center">
-                  {currentLevel === 1 && 'Level 1 Single Digit Addition complete! Prepare for Addition.'}
-                  {currentLevel === 2 && 'Level 2 Addition complete! Prepare for Subtraction.'}
-                  {currentLevel === 3 && 'Level 3 Subtraction complete! Prepare for Forced Carry Addition.'}
-                  {currentLevel === 4 && 'Level 4 Carry Addition complete! Prepare for Forced Borrow Subtraction.'}
-                  {currentLevel === 5 && 'Level 5 Borrow Subtraction complete! Prepare for Mixed Mastery Boss Wave.'}
-                  {currentLevel === 6 && 'All math defense training levels complete! Math Hero Squad operations fully online.'}
-                </div>
-              </div>
-            </div>
-
-            <div className="flex gap-3 justify-center pt-3 w-full">
-              {currentLevel === 1 && (
-                <>
-                  <button
-                    onClick={handleReset}
-                    className="px-5 py-3 bg-slate-950 border border-slate-800 text-slate-400 hover:border-slate-500 hover:text-white font-mono text-xs uppercase strict-rounded transition-colors cursor-pointer font-bold flex-1"
-                  >
-                    Reset Single Digit Addition
-                  </button>
-                  <button
-                    onClick={() => {
-                      setCurrentLevel(2);
-                      setEnemyHealth(100);
-                      setEnemyProgress(0);
-                      setIsMastered(false);
-                      setIsGameOver(false);
-                      loadNewPuzzle(2);
-                    }}
-                    className="px-5 py-3 bg-green-950 border border-green-500 text-green-400 hover:bg-green-900 font-mono text-xs uppercase strict-rounded transition-colors cursor-pointer font-bold flex-1"
-                  >
-                    Next Level: Addition
-                  </button>
-                </>
-              )}
-              {currentLevel === 2 && (
-                <>
-                  <button
-                    onClick={handleReset}
-                    className="px-5 py-3 bg-slate-950 border border-slate-800 text-slate-400 hover:border-slate-500 hover:text-white font-mono text-xs uppercase strict-rounded transition-colors cursor-pointer font-bold flex-1"
-                  >
-                    Reset Addition
-                  </button>
-                  <button
-                    onClick={() => {
-                      setCurrentLevel(3);
-                      setEnemyHealth(100);
-                      setEnemyProgress(0);
-                      setIsMastered(false);
-                      setIsGameOver(false);
-                      loadNewPuzzle(3);
-                    }}
-                    className="px-5 py-3 bg-green-950 border border-green-500 text-green-400 hover:bg-green-900 font-mono text-xs uppercase strict-rounded transition-colors cursor-pointer font-bold flex-1"
-                  >
-                    Next Level: Subtraction
-                  </button>
-                </>
-              )}
-              {currentLevel === 3 && (
-                <>
-                  <button
-                    onClick={handleReset}
-                    className="px-5 py-3 bg-slate-950 border border-slate-800 text-slate-400 hover:border-slate-500 hover:text-white font-mono text-xs uppercase strict-rounded transition-colors cursor-pointer font-bold flex-1"
-                  >
-                    Reset Subtraction
-                  </button>
-                  <button
-                    onClick={() => {
-                      setCurrentLevel(4);
-                      setEnemyHealth(100);
-                      setEnemyProgress(0);
-                      setIsMastered(false);
-                      setIsGameOver(false);
-                      loadNewPuzzle(4);
-                    }}
-                    className="px-5 py-3 bg-green-950 border border-green-500 text-green-400 hover:bg-green-900 font-mono text-xs uppercase strict-rounded transition-colors cursor-pointer font-bold flex-1"
-                  >
-                    Next Level: Carry Addition
-                  </button>
-                </>
-              )}
-              {currentLevel === 4 && (
-                <>
-                  <button
-                    onClick={handleReset}
-                    className="px-5 py-3 bg-slate-950 border border-slate-800 text-slate-400 hover:border-slate-500 hover:text-white font-mono text-xs uppercase strict-rounded transition-colors cursor-pointer font-bold flex-1"
-                  >
-                    Reset Carry Addition
-                  </button>
-                  <button
-                    onClick={() => {
-                      setCurrentLevel(5);
-                      setEnemyHealth(100);
-                      setEnemyProgress(0);
-                      setIsMastered(false);
-                      setIsGameOver(false);
-                      loadNewPuzzle(5);
-                    }}
-                    className="px-5 py-3 bg-green-950 border border-green-500 text-green-400 hover:bg-green-900 font-mono text-xs uppercase strict-rounded transition-colors cursor-pointer font-bold flex-1"
-                  >
-                    Next Level: Borrow Subtraction
-                  </button>
-                </>
-              )}
-              {currentLevel === 5 && (
-                <>
-                  <button
-                    onClick={handleReset}
-                    className="px-5 py-3 bg-slate-950 border border-slate-800 text-slate-400 hover:border-slate-500 hover:text-white font-mono text-xs uppercase strict-rounded transition-colors cursor-pointer font-bold flex-1"
-                  >
-                    Reset Borrow Subtraction
-                  </button>
-                  <button
-                    onClick={() => {
-                      setCurrentLevel(6);
-                      setEnemyHealth(100);
-                      setEnemyProgress(0);
-                      setIsMastered(false);
-                      setIsGameOver(false);
-                      loadNewPuzzle(6);
-                    }}
-                    className="px-5 py-3 bg-green-950 border border-green-500 text-green-400 hover:bg-green-900 font-mono text-xs uppercase strict-rounded transition-colors cursor-pointer font-bold flex-1"
-                  >
-                    Next Level: Boss Wave
-                  </button>
-                </>
-              )}
-              {currentLevel === 6 && (
-                <>
-                  <button
-                    onClick={handleReset}
-                    className="px-5 py-3 bg-slate-950 border border-slate-800 text-slate-400 hover:border-slate-500 hover:text-white font-mono text-xs uppercase strict-rounded transition-colors cursor-pointer font-bold flex-1"
-                  >
-                    Reset Boss Wave
-                  </button>
-                  <button
-                    onClick={onBack}
-                    className="px-5 py-3 bg-green-950 border border-green-500 text-green-400 hover:bg-green-900 font-mono text-xs uppercase strict-rounded transition-colors cursor-pointer font-bold flex-1"
-                  >
-                    Main Menu
-                  </button>
-                </>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Game Over Overlay */}
-      {isGameOver && (
-        <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 z-50 animate-fade-in">
-          <div className="relative w-full max-w-md bg-slate-900 border border-red-500/40 p-6 strict-rounded shadow-[0_0_50px_rgba(239,68,68,0.15)] flex flex-col space-y-4 text-center">
-            
-            {/* Corner decorations */}
-            <div className="absolute -top-px -left-px w-4 h-4 border-t-2 border-l-2 border-red-400 rounded-tl-[2px]"></div>
-            <div className="absolute -bottom-px -right-px w-4 h-4 border-b-2 border-r-2 border-red-400 rounded-br-[2px]"></div>
-
-            <div className="flex flex-col items-center space-y-2">
-              <div className="p-3 bg-red-500/10 border border-red-500/30 text-red-400 strict-rounded animate-pulse">
-                <AlertCircle size={48} />
-              </div>
-              <h3 className="font-display font-black text-red-400 text-xl tracking-wider uppercase pt-2">
-                DEFENSE BREACHED
-              </h3>
-              <span className="font-mono text-xs text-slate-500">
-                {currentLevel === 6 ? 'DR. NULL BREACHED MAIN FRAME' : 'GLITCH-BOT REACHED MAIN FRAME'}
-              </span>
-            </div>
-
-            <div className="space-y-3 py-2 text-slate-300 text-sm leading-relaxed font-sans font-medium">
-              <p>
-                {currentLevel === 6 
-                  ? 'Dr. Null advanced too close and corrupted our calculations!' 
-                  : 'The Glitch-Bot advanced too close and corrupted our calculations!'}
-              </p>
-              <div className="text-xs text-slate-400 border border-slate-800 p-3 bg-slate-950/40 strict-rounded flex justify-center">
-                <div>
-                  <span className="block text-slate-500 font-bold uppercase tracking-wider text-[10px] mb-1">SCORE EARNED</span>
-                  <span className="text-2xl text-red-400 font-black font-display">{score}</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex gap-3 justify-center pt-3 w-full">
-              <button
-                onClick={onBack}
-                className="px-5 py-3 bg-slate-950 border border-slate-800 text-slate-400 hover:border-slate-500 hover:text-white font-mono text-xs uppercase strict-rounded transition-colors cursor-pointer font-bold flex-1"
-              >
-                Exit
-              </button>
-              <button
-                onClick={handleReset}
-                className="px-5 py-3 bg-red-950 border border-red-500 text-red-400 hover:bg-red-900 font-mono text-xs uppercase strict-rounded transition-colors cursor-pointer font-bold flex-1 flex items-center justify-center gap-2"
-              >
-                <RefreshCw size={14} /> Retry Mission
-              </button>
-            </div>
-          </div>
-        </div>
+      {/* Level Ended Overlay */}
+      {(isMastered || isGameOver) && (
+        <LevelEndedOverlay
+          isMastered={isMastered}
+          currentLevel={currentLevel}
+          score={score}
+          onReset={handleReset}
+          onNextLevel={handleNextLevel}
+          onBack={onBack}
+        />
       )}
     </div>
   );
