@@ -1,9 +1,18 @@
-const CACHE_NAME = 'math-hero-squad-v42';
+const CACHE_NAME = 'math-hero-squad-v43';
 const PRECACHE_ASSETS = [
   './',
   './index.html',
   './favicon.svg',
-  './manifest.json'
+  './manifest.json',
+  './fonts/orbitron.woff2',
+  './fonts/outfit.woff2',
+  './audio/dash-volt-strike.mp3',
+  './audio/titan-shock-wave.mp3',
+  './audio/aero-whirlwind.mp3',
+  './audio/intro.mp3',
+  './audio/wrong-answer.mp3',
+  './audio/level-mastered.mp3',
+  './audio/level-failed.mp3'
 ];
 
 // Install event: cache initial shell assets
@@ -38,6 +47,13 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   // Only handle HTTP/HTTPS requests (bypass chrome-extension://, data://, etc.)
   if (!event.request.url.startsWith(self.location.origin)) {
+    return;
+  }
+
+  // Handle Range Requests (specifically for audio/video files)
+  const rangeHeader = event.request.headers.get('range');
+  if (rangeHeader) {
+    event.respondWith(handleRangeRequest(event.request));
     return;
   }
 
@@ -99,3 +115,38 @@ self.addEventListener('fetch', (event) => {
     })
   );
 });
+
+// Helper to handle Range Requests for cached assets (like media/audio)
+async function handleRangeRequest(request) {
+  const cache = await caches.open(CACHE_NAME);
+  const cachedResponse = await cache.match(request);
+
+  if (!cachedResponse) {
+    return fetch(request);
+  }
+
+  try {
+    const arrayBuffer = await cachedResponse.arrayBuffer();
+    const rangeHeader = request.headers.get('range');
+    const bytes = rangeHeader.replace('bytes=', '').split('-');
+    const start = parseInt(bytes[0], 10);
+    const end = bytes[1] ? parseInt(bytes[1], 10) : arrayBuffer.byteLength - 1;
+
+    const chunk = arrayBuffer.slice(start, end + 1);
+
+    return new Response(chunk, {
+      status: 206,
+      statusText: 'Partial Content',
+      headers: {
+        'Content-Range': `bytes ${start}-${end}/${arrayBuffer.byteLength}`,
+        'Content-Length': chunk.byteLength,
+        'Content-Type': cachedResponse.headers.get('content-type') || 'audio/mpeg',
+        'Accept-Ranges': 'bytes',
+      },
+    });
+  } catch (err) {
+    console.error('[Service Worker] Error slicing range buffer:', err);
+    return fetch(request);
+  }
+}
+
