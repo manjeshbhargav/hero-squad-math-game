@@ -6,9 +6,9 @@ import useVillainState from '../hooks/useVillainState';
 import useCheatKeys from '../hooks/useCheatKeys';
 import { ArrowLeft } from 'lucide-react';
 import LevelEndedOverlay from './LevelEndedOverlay';
-import wrongAnswerSound from '../assets/wrong-answer.mp3';
-import levelMasteredSound from '../assets/level-mastered.mp3';
-import levelFailedSound from '../assets/level-failed.mp3';
+const wrongAnswerSound = './audio/wrong-answer.mp3';
+const levelMasteredSound = './audio/level-mastered.mp3';
+const levelFailedSound = './audio/level-failed.mp3';
 
 export default function CombatArena({ onBack, initialLevel = 1 }) {
   const wrongAnswerAudio = useRef(null);

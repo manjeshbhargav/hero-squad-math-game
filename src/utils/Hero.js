@@ -6,9 +6,9 @@ import DashWeapon from '../components/weapons/DashWeapon';
 import TitanWeapon from '../components/weapons/TitanWeapon';
 import AeroWeapon from '../components/weapons/AeroWeapon';
 
-import voltStrikeSound from '../assets/dash-volt-strike.mp3';
-import titanShockWaveSound from '../assets/titan-shock-wave.mp3';
-import aeroWhirlwindSound from '../assets/aero-whirlwind.mp3';
+const voltStrikeSound = './audio/dash-volt-strike.mp3';
+const titanShockWaveSound = './audio/titan-shock-wave.mp3';
+const aeroWhirlwindSound = './audio/aero-whirlwind.mp3';
 
 export default class Hero {
   constructor(config) {

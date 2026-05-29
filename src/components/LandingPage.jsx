@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Play, X, Info, ChevronLeft, ChevronRight, ShieldAlert } from 'lucide-react';
 import Hero from '../utils/Hero';
 import Villain from '../utils/Villain';
-import introMusic from '../assets/intro.mp3';
+const introMusic = './audio/intro.mp3';
 
 const audio = new Audio(introMusic);
 audio.loop = true;
