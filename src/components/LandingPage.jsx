@@ -343,7 +343,7 @@ export default function LandingPage({ onStart }) {
                 BOOT SEQUENCE IN PROGRESS
               </span>
               <h2 className="text-2xl font-display font-black tracking-tight text-white uppercase pt-2">
-                MATH HERO SQUAD
+                MATH HERO SQUAD!
               </h2>
               <p className="text-xs font-mono text-slate-500 uppercase tracking-widest">
                 Mainframe defense systems launching...
