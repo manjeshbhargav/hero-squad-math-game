@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback, useMemo } from 'react';
+import { useEffect, useRef, useMemo } from 'react';
 import GameLevel from '../utils/GameLevel';
 import useGameState from '../hooks/useGameState';
 import useHeroState from '../hooks/useHeroState';
@@ -53,22 +53,13 @@ export default function CombatArena({ onBack, initialLevel = 1 }) {
     setIsHit
   } = useHeroState();
 
-  const handleGameOver = useCallback(() => {
-    setIsGameOver(true);
-  }, [setIsGameOver]);
-
   const {
     enemyHealth,
     setEnemyHealth,
     enemyProgress,
     setEnemyProgress,
     resetVillain
-  } = useVillainState({
-    isGameOver,
-    isMastered,
-    animationState,
-    onGameOver: handleGameOver
-  });
+  } = useVillainState();
 
   // Game over sound effect trigger
   useEffect(() => {

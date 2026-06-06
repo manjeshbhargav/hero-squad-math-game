@@ -110,7 +110,7 @@ To facilitate iterative verification and human testing, development is structure
     - Health Bar prepended by a briefcase icon with a "+" inside it. The health bar and briefcase icon color dynamically transition from green (full) to red (empty) using an interpolated HSL value.
     - Score counter (no robots defeated count).
   - Combat & Progression:
-    - Continuous Creep: Glitch-Bot slowly and continuously walks towards the finish line (1% progress every 450ms).
+    - Creeping Mechanics: Glitch-Bots do not advance towards the heroes unless the player selects a wrong answer.
     - Correct answer: Dash plays the volt strike sound effect (`dash-volt-strike.mp3`) and executes Volt Strike, and after a `150ms` visual delay, the Glitch-Bot flashes, loses 25% health, and is pushed back to the right by `10%` progress. Score increases by `+10` points immediately.
     - Incorrect answer: Plays the incorrect answer sound effect (`wrong-answer.mp3`), Glitch-Bot instantly advances by `15%` progress, and score decreases by `-5` points (clamped to 0).
     - Equation changes immediately on both correct and incorrect selections.
